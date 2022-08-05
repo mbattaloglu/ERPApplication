@@ -3,7 +3,9 @@ import {View} from 'react-native';
 
 const App = () => {
   return (
-    <View></View>
+    <View>
+      
+    </View>
   );
 };
 
