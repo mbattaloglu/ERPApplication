@@ -5,7 +5,7 @@ import { Images, Icons } from "../components/Constants";
 
 const MainMenu = () => {
     return (
-        <View style={{}}>
+        <View>
             {/* Logo */}
             <View>
                 <Image source={Images.LogoImage} style={styles.logo} />
