@@ -3,9 +3,9 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import MainButton from "../components/MainButton";
 import { Images, Icons } from "../components/Constants";
 
-const MainMenu = () => {
+const MainMenu = ({navigation}) => {
     return (
-        <View>
+        <View style={{flex: 1, justifyContent: 'center'}}>
             {/* Logo */}
             <View>
                 <Image source={Images.LogoImage} style={styles.logo} />
@@ -21,7 +21,7 @@ const MainMenu = () => {
             <View>
                 <MainButton title={"Müşteri Sevk Listesi"} color={"#80C342"} />
                 <MainButton title={"Talimatlarım"} color={"#FFC60B"} />
-                <MainButton title={"Hesap Ektresi"} color={"#68CEEF"} />
+                <MainButton title={"Hesap Ektresi"} color={"#68CEEF"} command={() => navigation.navigate("BankStatement")}/>
                 <MainButton title={"Ayarlar"} color={"#F1592A"} />
             </View>
         </View>
