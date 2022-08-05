@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import MainMenu from "./src/pages/MainMenu";
-import { User } from "./src/components/Constants";
-import ExtranctBox from "./src/components/Box/ExtractBox";
-import InstructionsBox from "./src/components/Box/InstructionsBox";
 
 const App = () => {
   /*useEffect(() => {
