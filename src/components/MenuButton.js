@@ -2,9 +2,9 @@ import {StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {Icons} from '../constants/Constants';
 import React from 'react';
 
-const MenuButton = ({title, titleStyle, boxStyle}) => {
+const MenuButton = ({title, titleStyle, boxStyle, onClickHandler}) => {
   return (
-    <TouchableOpacity style={[styles.boxStyle, boxStyle]}>
+    <TouchableOpacity style={[styles.boxStyle, boxStyle]} onPress={onClickHandler}>
       <Text style={[styles.titleStyle, titleStyle]}>{title}</Text>
       <Image source={Icons.click} />
     </TouchableOpacity>

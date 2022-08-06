@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthContext} from './Context';
 import {User, ThemeColors} from './src/constants/Constants';
 import MainMenu from './src/MainMenu';
+import BankStatement from './src/BankStatement';
 
 const MainStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -37,6 +38,18 @@ const App = () => {
               }}
               name="MainMenu"
               component={MainMenu}
+            />
+             <MainStack.Screen
+              name="BankStatement"
+              component={BankStatement}
+              options={{
+                title: 'Hesap Ekstresi',
+                headerStyle: {
+                  backgroundColor: ThemeColors.HeaderBar
+                },
+                headerTintColor: 'white',
+                headerTitleAlign: 'center'
+              }}
             />
           </MainStack.Navigator>
         ) : (

@@ -3,7 +3,7 @@ import React from 'react';
 import {Images, Icons} from './constants/Constants';
 import MenuButton from './components/MenuButton';
 
-const MainMenu = () => {
+const MainMenu = ({navigation}) => {
   return (
     <View style={styles.body}>
       <Image source={Images.LogoImage} styles={styles.logo} />
@@ -23,8 +23,12 @@ const MainMenu = () => {
         <MenuButton
           title={'Hesap Ekstresi'}
           boxStyle={{backgroundColor: '#30D5C8'}}
+          onClickHandler={() => navigation.navigate("BankStatement")}
         />
-        <MenuButton title={'Ayarlar'} boxStyle={{backgroundColor: '#DB4914'}} />
+        <MenuButton
+          title={'Ayarlar'}
+          boxStyle={{backgroundColor: '#DB4914'}}
+        />
       </View>
     </View>
   );
@@ -34,7 +38,7 @@ export default MainMenu;
 
 const styles = StyleSheet.create({
   body: {
-    marginTop : 10,
+    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
