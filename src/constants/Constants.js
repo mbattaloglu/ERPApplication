@@ -17,7 +17,11 @@ const Icons = {
 }
 
 const User = {
-    token: ''
+    token: '',
+    username : "osmanportal",
+    password : "123",
+    API : 'http://193.53.103.178:5312'
 }
+
 
 export {ThemeColors, Icons, Images, User};

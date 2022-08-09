@@ -1,15 +1,17 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-const CustomButton = ({boxStyle, titleStyle, title, onClickHandler}) => { 
+const CustomButton = ({boxStyle, titleStyle, title, onClickHandler}) => {
   return (
-    <TouchableOpacity style={[styles.boxStyle, boxStyle]} onPress={onClickHandler}>
+    <TouchableOpacity
+      style={[styles.boxStyle, boxStyle]}
+      onPress={onClickHandler}>
       <View>
         <Text style={[styles.titleStyle, titleStyle]}>{title}</Text>
       </View>
     </TouchableOpacity>
   );
-}
+};
 
 const styles = StyleSheet.create({
   boxStyle: {
