@@ -1,0 +1,48 @@
+--- Müşteri Sevk Listesi (DETAY)---
+
+/////////////Ana Başlık/////////////
+Kabul Tarihi    : DocumentDate
+Sevk Tarihi     : ShipmentDate
+Gönderen Şube   : SenderBranch > BranchName
+Alıcı Şube      : ReceieverBranch > BranchName
+Araç No         : TransportWaybill > declarationNumber
+Firma Bilgisi   : SenderName
+
+///////////Sevk Kalemleri///////////
+Ürün Cinsi      : TransportCardDetails > TranportProduct > Name
+Ambalaj         : TransportCardDetails > PackingQuantity
+Birimi          : TransportCardDetails > TransportUnitMultiplier > Name
+Adet            : TransportCardDetails > Quantity
+Kg              : TransportCardDetails > Weight
+Hacim           : TransportCardDetails > Volume
+
+/////////////Hizmetler/////////////
+Tahsilat Tipi   : TransportCardIncomes > IncomePaymentType
+Hizmet Kalemi   : (Bilinmiyor)
+Döviz Tipi      : TransportCardIncomes > CurrencyType > Name
+Hizmet Tutarı   : TransportCardIncomes > Amount (IncomeAmount)
+
+///////////Toplam Kutusu///////////
+Nakliyeci       : TransportShipperPlate > Plate
+Toplam Ambalaj  : TotalPackingQuantity
+Toplam KG       : TotalWeight
+Toplam Hacim    : TransportCardDetails > Volume | TotalVolume (Bozuk)
+
+"http://193.53.103.178:5312/api/odata/TransportCards?$top=1&$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight&$expand=SenderBranch($select=BranchName),ReceiverBranch($select=BranchName),TransportWaybill($select=declarationNumber),TransportCardDetails($expand=TransportProduct($select=Name),TransportUnitMultiplier($select=Name);$select=PackingQuantity,Quantity,Weight,Volume),TransportCardIncomes($expand=CurrencyType($select=Name);$select=IncomePaymentType,Amount),TransportShipperPlate($select=Plate)"
+--------------------
+
+--- Talimatlarım ---
+
+////////////Ana Başlık////////////
+Tarih           : 
+Açıklama        :
+Talimat No      :
+Para Birimi     :
+Talimat Tutarı  :
+Onay Durumu     :
+
+///////////Toplam Kutusu///////////
+
+Onay Bekleyen   :
+Onaylanan       :
+Ödenen          :

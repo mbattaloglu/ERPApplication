@@ -10,6 +10,7 @@ import { AuthContext } from "./Context";
 import BankStatement from "./src/pages/BankStatement";
 import Directives from "./src/pages/Directives";
 import TransportList from "./src/pages/TransportList";
+import Filter from "./src/pages/Filter";
 //#endregion
 
 const MainStack = createNativeStackNavigator();
@@ -77,6 +78,18 @@ const App = () => {
                 component={BankStatement}
                 options={{
                   title: 'Hesap Ekstresi',
+                  headerStyle: {
+                    backgroundColor: ThemeColors.HeaderBar
+                  },
+                  headerTintColor: 'white',
+                  headerTitleAlign: 'center'
+                }}
+              />
+              <MainStack.Screen
+                name="Filter"
+                component={Filter}
+                options={{
+                  title: 'Filtre',
                   headerStyle: {
                     backgroundColor: ThemeColors.HeaderBar
                   },

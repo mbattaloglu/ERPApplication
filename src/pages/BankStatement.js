@@ -5,9 +5,7 @@ import { User } from "../components/Constants";
 const BankStatement = ({ navigation }) => {
 
     useEffect(() => {
-        fetch('http://193.53.103.178:5312' +
-            '/api/odata/TransportCards' +
-            '?$top=1&$select=oid', {
+        fetch('http://193.53.103.178:5312/api/odata/TransportCards?$top=1&$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight', {
             method: 'GET', /* or POST/PUT/PATCH/DELETE */
             headers: {
                 'Authorization': 'Bearer ' + User.token,

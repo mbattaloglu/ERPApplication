@@ -11,7 +11,7 @@ const Directives = () => {
     const [items, setItems] = useState([]);
 
     const GetData = () => {
-        fetch(Api.link + '/odata/TransportPaymentDirectives/' + User.id + '/GetCustomerTransportPaymentDirective()?$top=10',
+        fetch(Api.link + '/odata/TransportPaymentDirectives?$top=10&$skip=' + i,
             {
                 method: 'GET',
                 headers: {

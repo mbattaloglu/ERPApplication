@@ -1,0 +1,20 @@
+-----------------------------------------------
+Müşteri Sevk Listesi;
+-Arac No, Toplam Hacim, KG, Çuval
+-> Sevk Detay Bilgileri
+-> Filtreleme: {Tarihler arası filtreleme, Araç numarası ve Firmaya göre filtreleme}
+-----------------------------------------------
+Talimatlarım;
+-Para Birimi, Onay Bekleyen, Onaylanan, Ödenen
+-> Talimata resim eklensin mi?
+-> Yeni talimat oluşturma
+-> Filtreleme {Tarihler arası filtreleme}
+!! Skip özelliği çalışmıyor.
+-----------------------------------------------
+Hesap Ekstresi;
+-Bütün bilgiler
+-> Filtreleme {Tarihler arası filtreleme}
+-----------------------------------------------
+Kullanıcı Bilgileri;
+-Şirket, Döviz Tipi, Kullanıcı ID'si...
+-----------------------------------------------
