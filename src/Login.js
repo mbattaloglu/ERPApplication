@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {AuthContext} from '../Context';
+import {User} from './constants/Constants';
 
 const Login = ({tab}) => {
   const {signIn} = useContext(AuthContext);
@@ -9,7 +10,7 @@ const Login = ({tab}) => {
   React.useEffect(() => {
     const loginHandler = async () => {
       const token = await fetch(
-        'http://193.53.103.178:5312/api/Authentication',
+        User.API+"/api/Authentication",
         {
           method: 'POST',
           headers: {'Content-type': 'application/json'},

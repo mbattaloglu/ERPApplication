@@ -1,70 +1,71 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const TransportPaymentDirectivesInfoBox = ({
+const CustomerSuppliersInfoBox = ({
   date,
   description,
-  directiveNumber,
+  type,
+  oid,
   currency,
-  amount,
-  status,
+  money,
   boxStyle,
+  isDebt = false,
 }) => {
   return (
     <View style={[styles.box, boxStyle]}>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Tarih</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Tarih</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{date}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{date}</Text>
         </View>
       </View>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Açıklama</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Açıklama</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{description}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{description}</Text>
         </View>
       </View>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Talimat No</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Tipi</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{directiveNumber}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{type}</Text>
         </View>
       </View>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Para Birimi</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Talimat Numarası</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{currency}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{oid}</Text>
         </View>
       </View>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Talimat Tutarı</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Para Birimi</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{amount}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{currency}</Text>
         </View>
       </View>
       <View style={styles.line}>
         <View style={styles.titleBox}>
-          <Text style={styles.text}>Onay Durumu</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Borç</Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.text}>{status}</Text>
+          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{money}</Text>
         </View>
       </View>
     </View>
   );
 };
 
-export default TransportPaymentDirectivesInfoBox;
+export default CustomerSuppliersInfoBox;
 
 const styles = StyleSheet.create({
   box: {
@@ -90,8 +91,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10,
   },
-  text: {
-    color: 'black',
+  debtText: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
+  receivingsText: {
+    color: 'green',
     fontWeight: 'bold',
   },
 });

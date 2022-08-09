@@ -6,7 +6,8 @@ import {User} from './constants/Constants';
 const BankStatement = ({navigation}) => {
   useEffect(() => {
     fetch(
-      'http://193.53.103.178:5312/api/odata/TransportPaymentDirectives/97209/GetCustomerTransportPaymentDirective()?$top=5&',
+      User.API +
+    "/api/odata/TransportPaymentDirectives/97209/GetCustomerTransportPaymentDirective()?$top=5&",
       {
         headers: {
           Authorization: 'Bearer ' + User.token,
@@ -16,7 +17,7 @@ const BankStatement = ({navigation}) => {
     )
       .then(res => res.json())
       .then(res => setData(res.value));
-  }, [data]);
+  }, []);
   const [data, setData] = useState([]);
 
   return (

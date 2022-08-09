@@ -16,6 +16,7 @@ import Login from './src/Login';
 import MainMenu from './src/Home';
 import TransportCards from './src/TransportCards';
 import TransportPaymentDirectives from './src/TransportPaymentDirectives';
+import CustomerSuppliers from './src/CustomerSuppliers';
 import Settings from './src/Settings';
 
 const MainStack = createNativeStackNavigator();
@@ -107,8 +108,8 @@ const App = () => {
                 }}
               />
               <Tab.Screen
-                name="FetchData"
-                component={TransportPaymentDirectives}
+                name="CustomerSuppliers"
+                component={CustomerSuppliers}
                 options={{
                   title: 'Hesap Ekstresi',
                   headerStyle: {

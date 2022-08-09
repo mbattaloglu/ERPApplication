@@ -20,7 +20,8 @@ const User = {
     token: '',
     username : "osmanportal",
     password : "123",
-    API : 'http://193.53.103.178:5312'
+    API : 'http://193.53.103.178:5312',
+    Oid : ""
 }
 
 

@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const InfoBox = ({
+const TransportCardInfoBox = ({
   carNo,
   company,
   orderId,
@@ -55,7 +55,7 @@ const InfoBox = ({
   );
 };
 
-export default InfoBox;
+export default TransportCardInfoBox;
 
 const styles = StyleSheet.create({
   box: {

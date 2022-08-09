@@ -6,7 +6,7 @@ import {User} from './constants/Constants';
 const BankStatement = ({navigation}) => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch('http://193.53.103.178:5312/api/odata/TransportCards?$top=5&', {
+    fetch(User.API + '/api/odata/TransportCards?$top=5&', {
       headers: {
         Authorization: 'Bearer ' + User.token,
         'Content-Type': 'application/json',
@@ -16,10 +16,6 @@ const BankStatement = ({navigation}) => {
       .then(res => res.value)
       .then(res => setData(res));
   }, []);
-
-  const checkIndexIsEven = index => {
-    return index % 2 == 0;
-  };
 
   return (
     <FlatList

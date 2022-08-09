@@ -10,7 +10,7 @@ const MainMenu = ({navigation}) => {
   React.useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
-        'http://193.53.103.178:5312/api/odata/CustomerSuppliers',
+        User.API+'/api/odata/CustomerSuppliers',
         {
           headers: {
             Authorization: 'Bearer ' + User.token,
@@ -24,7 +24,7 @@ const MainMenu = ({navigation}) => {
 
     const fetchImage = async () => {
       const data = await fetch(
-        'http://193.53.103.178:5312/api/odata/Companies/GetCompanyImage()',
+        User.API+'/api/odata/Companies/GetCompanyImage()',
         {
           headers: {
             Authorization: 'Bearer ' + User.token,
@@ -35,6 +35,7 @@ const MainMenu = ({navigation}) => {
       const json = await data.json();
       const image = json.value;
       setImg(image);
+      
     };
 
     fetchData().catch(err => console.log(err));
