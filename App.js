@@ -5,7 +5,12 @@ import MainMenu from "./src/pages/MainMenu";
 import Login from "./src/pages/Login";
 import { ThemeColors, User } from "./src/components/Constants";
 import { AuthContext } from "./Context";
+
+//#region Pages
 import BankStatement from "./src/pages/BankStatement";
+import Directives from "./src/pages/Directives";
+import TransportList from "./src/pages/TransportList";
+//#endregion
 
 const MainStack = createNativeStackNavigator();
 
@@ -44,10 +49,10 @@ const App = () => {
               }}
             />
             <MainStack.Screen
-              name="BankStatement"
-              component={BankStatement}
+              name="TransportList"
+              component={TransportList}
               options={{
-                title: 'Hesap Ekstresi',
+                title: 'Müşteri Sevk Listesi',
                 headerStyle: {
                   backgroundColor: ThemeColors.HeaderBar
                 },
@@ -55,6 +60,30 @@ const App = () => {
                 headerTitleAlign: 'center'
               }}
             />
+            <MainStack.Screen
+              name="Directives"
+              component={Directives}
+              options={{
+                title: 'Talimatlarım',
+                headerStyle: {
+                  backgroundColor: ThemeColors.HeaderBar
+                },
+                headerTintColor: 'white',
+                headerTitleAlign: 'center'
+              }}
+            />
+              <MainStack.Screen
+                name="BankStatement"
+                component={BankStatement}
+                options={{
+                  title: 'Hesap Ekstresi',
+                  headerStyle: {
+                    backgroundColor: ThemeColors.HeaderBar
+                  },
+                  headerTintColor: 'white',
+                  headerTitleAlign: 'center'
+                }}
+              />
           </MainStack.Navigator>
         ) : (
           <AuthStack.Navigator>

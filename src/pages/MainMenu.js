@@ -19,8 +19,8 @@ const MainMenu = ({navigation}) => {
 
             {/* Buttons */}
             <View>
-                <MainButton title={"Müşteri Sevk Listesi"} color={"#80C342"} />
-                <MainButton title={"Talimatlarım"} color={"#FFC60B"} />
+                <MainButton title={"Müşteri Sevk Listesi"} color={"#80C342"} command={() => navigation.navigate("TransportList")}/>
+                <MainButton title={"Talimatlarım"} color={"#FFC60B"} command={() => navigation.navigate("Directives")}/>
                 <MainButton title={"Hesap Ektresi"} color={"#68CEEF"} command={() => navigation.navigate("BankStatement")}/>
                 <MainButton title={"Ayarlar"} color={"#F1592A"} />
             </View>

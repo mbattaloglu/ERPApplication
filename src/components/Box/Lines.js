@@ -8,7 +8,8 @@ const ShortLine = ({ title, description, flexBox, textColor, textAlign }) => {
             <View style={styles.lineBox} >
                 <Text style={[styles.lineText, {color: textColor}]}>{title}</Text>
             </View>
-            <View style={[styles.lineBox, { width: 190 }]} >
+
+            <View style={[styles.lineBox, { width: 200 }]} >
                 <Text style={[styles.lineText, {color: textColor, textAlign: textAlign}]}>{description}</Text>
             </View>
         </View>
@@ -21,7 +22,8 @@ const LongLine = ({ title, description, flexBox, textColor }) => {
             <View style={[styles.lineBox,]} >
                 <Text style={[styles.lineText, {color: textColor}]}>{title}</Text>
             </View>
-            <View style={[styles.lineBox, { width: 190}]} >
+
+            <View style={[styles.lineBox, { width: 200}]} >
                 <Text style={[styles.lineText, {color: textColor}]}>{description}</Text>
             </View>
         </View>
@@ -31,14 +33,14 @@ const LongLine = ({ title, description, flexBox, textColor }) => {
 const styles = StyleSheet.create({
     lineBox: {
         borderWidth: 1,
-        width: 120,
+        width: 130,
         justifyContent: 'center',
         paddingHorizontal: 5,
         backgroundColor: 'white',
     },
     lineText: {
         color: '#459E3C',
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: '700',
     }
 })

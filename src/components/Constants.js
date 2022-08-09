@@ -17,8 +17,13 @@ const Icons = {
     user: UserIcon
 }
 
-const User = {
-    token: ''
+const Api = {
+    link: 'http://193.53.103.178:5312/api'
 }
 
-export {ThemeColors, Icons, Images, User};
+const User = {
+    token: '',
+    id: 97209,
+}
+
+export {ThemeColors, Icons, Images, User, Api};
