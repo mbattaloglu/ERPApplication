@@ -5,13 +5,13 @@ import { User, Api } from "../components/Constants";
 import TotalBox from "../components/TotalBox";
 
 var i = 0;
-
+// http://193.53.103.178:5312/api/odata/TransportPaymentDirectives/97209/GetCustomerTransportPaymentDirective(Date>'2022-01-01 00:00:00' & Date<'2022-01-31 23:59:59')
 const Directives = () => {
 
     const [items, setItems] = useState([]);
 
     const GetData = () => {
-        fetch(Api.link + '/odata/TransportPaymentDirectives?$top=10&$skip=' + i,
+        fetch(Api.link + '/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 &$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus&$top=10&$skip=' + i,
             {
                 method: 'GET',
                 headers: {
@@ -47,9 +47,9 @@ const Directives = () => {
                 )}
             />
             <TotalBox
-                mainBottom={"Onay Bekleyen"}
-                mainMiddle={"Onaylanan"}
-                mainTop={"Ödenen"}
+                mainTop={["Onay Bekleyen", ]}
+                mainMiddle={["Onaylanan", ]}
+                mainBottom={["Ödenen", ]}
             />
 
         </View>

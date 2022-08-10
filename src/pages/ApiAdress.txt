@@ -1,3 +1,20 @@
+--- Müşteri Sevk Listesi ---
+
+////////////Ana Başlık////////////
+Araç No         : TransportWaybill > declarationNumber
+Firma           : SenderName
+Fiş Numarası    : Oid
+Tarih           : DocumentDate
+Ambalaj         : TotalPackingQuantity
+
+///////////Toplam Kutusu///////////
+Toplam Ambalaj  : 
+Toplam KG       : 
+Toplam Hacim    : 
+
+http://193.53.103.178:5312/api/odata/TransportCards?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity&$expand=TransportWaybill($select=declarationNumber)&$top=10
+----------------------------
+
 --- Müşteri Sevk Listesi (DETAY)---
 
 /////////////Ana Başlık/////////////
@@ -18,11 +35,11 @@ Hacim           : TransportCardDetails > Volume
 
 /////////////Hizmetler/////////////
 Tahsilat Tipi   : TransportCardIncomes > IncomePaymentType
-Hizmet Kalemi   : (Bilinmiyor)
+Hizmet Kalemi   : 
 Döviz Tipi      : TransportCardIncomes > CurrencyType > Name
 Hizmet Tutarı   : TransportCardIncomes > Amount (IncomeAmount)
 
-///////////Toplam Kutusu///////////
+////////Toplam Kutusu////////
 Nakliyeci       : TransportShipperPlate > Plate
 Toplam Ambalaj  : TotalPackingQuantity
 Toplam KG       : TotalWeight
@@ -34,15 +51,33 @@ Toplam Hacim    : TransportCardDetails > Volume | TotalVolume (Bozuk)
 --- Talimatlarım ---
 
 ////////////Ana Başlık////////////
-Tarih           : 
-Açıklama        :
-Talimat No      :
-Para Birimi     :
-Talimat Tutarı  :
-Onay Durumu     :
+Tarih           : Date
+Açıklama        : Desc
+Talimat No      : Code
+Para Birimi     : 
+Talimat Tutarı  : Amount
+Onay Durumu     : TPDPaymentStatus
 
 ///////////Toplam Kutusu///////////
 
 Onay Bekleyen   :
 Onaylanan       :
 Ödenen          :
+
+"http://193.53.103.178:5312/api/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 and Date le  2022-01-31T12:53:36Z&$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus"
+--- Hesap Ekstresi ---
+
+/////////////Ana Başlık/////////////
+Tarih           : FinancialTrxs > TrxDate
+Açıklama        : FinancialTrxs > LineDescription
+Tipi            : FinancialTrxs > SubType
+Talimat Numarası: FinancialTrxs > Oid
+Para Birimi     : 
+Borç            : FinancialTrxs > Amount
+
+Borcu           :
+Alacağı         :
+Bakiye          :
+
+"http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=FinancialTrxs($orderby=TrxDate;$select=TrxDate,LineDescription,SubType,Oid,Amount;$top=10)&$select=FinancialTrxs"
+----------------------

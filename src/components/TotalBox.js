@@ -2,12 +2,20 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ThemeColors } from "./Constants";
 
-const TotalBox = ({mainTop, mainMiddle, mainBottom}) => {
+const TotalBox = ({ mainTop, mainMiddle, mainBottom }) => {
     return (
-        <View style={{ height: 130, backgroundColor: ThemeColors.HeaderBar, justifyContent: 'center', alignItems: 'center', paddingVertical: 3, borderWidth: 2, marginHorizontal: 21 }}>
-            <LineBox main={mainTop} desc={"Bilinmiyor"} />
-            <LineBox main={mainMiddle} desc={"Bilinmiyor"} />
-            <LineBox main={mainBottom} desc={"Bilinmiyor"} />
+        <View style={{
+            height: 130,
+            backgroundColor: ThemeColors.HeaderBar,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 3,
+            borderWidth: 2,
+            marginHorizontal: 21
+        }}>
+            <LineBox main={mainTop[0]} desc={mainTop[1]} />
+            <LineBox main={mainMiddle[0]} desc={mainMiddle[1]} />
+            <LineBox main={mainBottom[0]} desc={mainBottom[1]} />
         </View>
     )
 }

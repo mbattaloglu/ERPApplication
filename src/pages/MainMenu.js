@@ -1,76 +1,84 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import MainButton from "../components/MainButton";
-import { Images, Icons, Api, User } from "../components/Constants";
+import {StyleSheet, Image, Text, View} from 'react-native';
+import React from 'react';
+import { Api, User } from '../components/Constants';
 
-const MainMenu = ({ navigation }) => {
+const MainMenu = ({navigation}) => {
+  const [loading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState([]);
+  const [img, setImg] = React.useState();
 
-    const [info, setInfo] = useState([]);
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetch(
+        Api.link+'/odata/CustomerSuppliers',
+        {
+          headers: {
+            Authorization: 'Bearer ' + User.token,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      const json = await data.json();
+      setData(...json.value);
+    };
 
-    const getInfo = async() => {
-        await fetch(Api.link + '/odata/CustomerSuppliers', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + User.token,
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then(res => setInfo(...res.value))
-    }
+    const fetchImage = async () => {
+      const data = await fetch(
+        Api.link + '/odata/Companies/GetCompanyImage()',
+        {
+          headers: {
+            Authorization: 'Bearer ' + User.token,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      const json = await data.json();
+      const image = json.value;
+      setImg(image);
+      
+    };
 
-    useEffect(() => {
-        getInfo();
-    }, [])
-    return (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-            {/* Logo */}
-            <View>
-                <Image source={Images.LogoImage} style={styles.logo} />
-            </View>
+    fetchData().catch(err => console.log(err));
+    fetchImage().catch(err => console.log(err));
+    setLoading(false);
+  }, []);
 
-            {/* User */}
-            <View style={styles.userLine}>
-                <Image source={Icons.user} style={styles.userLogo} />
-                <Text style={styles.userText}>{info.Code} {info.Name}</Text>
-            </View>
-
-            {/* Buttons */}
-            <View>
-                <MainButton title={"Müşteri Sevk Listesi"} color={"#80C342"} command={() => navigation.navigate("TransportList")} />
-                <MainButton title={"Talimatlarım"} color={"#FFC60B"} command={() => navigation.navigate("Directives")} />
-                <MainButton title={"Hesap Ektresi"} color={"#68CEEF"} command={() => navigation.navigate("BankStatement")} />
-                <MainButton title={"Ayarlar"} color={"#F1592A"} />
-            </View>
+  return (
+    <View>
+      {data ? (
+        <View style={styles.imageBox}>
+          <Image
+            source={{uri: `data:image/gif;base64,${img}`}}
+            style={styles.image}></Image>
+          <Text style={styles.text}>{data.Oid}</Text>
+          <Text style={styles.text}>{data.Code}</Text>
+          <Text style={styles.text}>{data.Name}</Text>
+          <Text style={styles.text}>{data.PhoneNumber}</Text>
+          <Text style={[{textAlign: 'left'}, styles.text]}>{data.Title}</Text>
+          <Text style={styles.text}>{data.CustomerSupplierType}</Text>
         </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    logo: {
-        height: 100,
-        width: 300,
-        alignSelf: 'center'
-    },
-    userLine: {
-        marginVertical: 5,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    userLogo: {
-        height: 58,
-        width: 42
-    },
-    userText: {
-        fontSize: 30,
-        textAlign: 'center',
-        color: 'black',
-        height: 150,
-        width: 250,
-        textAlignVertical: 'center'
-    }
-})
+      ) : (
+        <Text>Loading...</Text>
+      )}
+    </View>
+  );
+};
 
 export default MainMenu;
+
+const styles = StyleSheet.create({
+  imageBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  image: {
+    height: 200,
+    width: 300,
+    resizeMode: 'contain'
+  },
+  text: {
+    fontSize: 20,
+    color: 'black',
+  },
+});

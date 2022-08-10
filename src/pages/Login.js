@@ -1,73 +1,57 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
-
-import CustomButton from '../components/CustomButton';
-import InputField from '../components/InputField';
-import { User } from '../components/Constants';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { AuthContext } from '../../Context';
+import { Api } from '../components/Constants';
 
-const Login = () => {
-
+const Login = ({ tab }) => {
   const { signIn } = useContext(AuthContext);
 
-  const fetchData = async () => {
-    
-    const token = await fetch('http://193.53.103.178:5312/api/Authentication', {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    })
-      .then(res => res.json())
-      .then(res => res.token)
-      .catch((e) => console.log("Hata: ", e))
+  const [loading, setLoading] = useState(true);
 
-    if (token) {
-      signIn({token})
-    }
-    else {
-      alert("Kullanıcı adı veya şifre hatalı!")
-    }
-  };
+  React.useEffect(() => {
+    const loginHandler = async () => {
+      const token = await fetch(
+        Api.link + "/Authentication",
+        {
+          method: 'POST',
+          headers: { 'Content-type': 'application/json' },
+          body: JSON.stringify({
+            username: 'osmanportal',
+            password: '123',
+          }),
+        },
+      )
+        .then(res => res.json())
+        .then(res => res.token)
+        .catch(error => console.log(error));
+      if (token) {
+        signIn({ token });
+        setLoading(false);
+      } else {
+        alert('Kullanıcı adı veya şifre hatalı');
+      }
+    };
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+    loginHandler().catch(err => console.log(err));
+  }, []);
 
-  useEffect(() => {
-    setUsername('osmanportal');
-    setPassword('123');
-  }, [])
-
-  return (
-    <View>
-      <View style={{ marginTop: 40, marginBottom: 40 }}>
-        <InputField title={'Kullanıcı Adı'} command={value => { setUsername(value) }}/>
-        <InputField safeTextEntry title={'Şifre'} command={value => { setPassword(value) }}/>
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Loading</Text>
       </View>
-      <CustomButton boxStyle={styles.buttonBox} title={'Giriş Yap'} onClickHandler={() => { fetchData() }} />
-    </View>
-  );
-}
+    );
+  }
+};
 const styles = StyleSheet.create({
-  buttonBox: {
-    alignSelf: "flex-end",
-    marginEnd: 20,
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
-  inputBox: {
-    marginBottom: 20,
-    marginLeft: 25,
-    marginRight: 25,
-  },
-  title: {
-    fontSize: 16,
-    color: 'black',
-  },
-  inputArea: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    padding: 5,
+  text: {
+    fontSize: 20,
+    color: "black"
   },
 });
 

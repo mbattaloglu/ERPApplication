@@ -1,7 +1,17 @@
 import React from "react";
+import { StyleSheet } from "react-native";
+
 import ClickIcon from "../images/icons/Select.png"
 import UserIcon from "../images/icons/user.png"
 import LogoImage from "../images/logo.png"
+
+//#region TabBar
+import HomeIcon from "../images/icons/Tab/home.png"
+import TransportIcon from "../images/icons/Tab/delivery.png"
+import DirectiveIcon from "../images/icons/Tab/checked.png"
+import SuppliersIcon from "../images/icons/Tab/budget.png"
+import SettingsIcon from "../images/icons/Tab/settings.png"
+//#endregion
 
 
 const ThemeColors = {
@@ -14,7 +24,12 @@ const Images = {
 
 const Icons = {
     click: ClickIcon,
-    user: UserIcon
+    user: UserIcon,
+    home: HomeIcon,
+    transport: TransportIcon,
+    directive: DirectiveIcon,
+    suppliers: SuppliersIcon,
+    settings: SettingsIcon
 }
 
 const Api = {
@@ -26,4 +41,12 @@ const User = {
     id: 97209,
 }
 
-export {ThemeColors, Icons, Images, User, Api};
+const StylesAll = StyleSheet.create({
+    icon: {
+        height: 30,
+        width: 30,
+
+    }
+})
+
+export {ThemeColors, Icons, Images, User, Api, StylesAll};
