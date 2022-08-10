@@ -15,8 +15,8 @@ const Login = ({tab}) => {
           method: 'POST',
           headers: {'Content-type': 'application/json'},
           body: JSON.stringify({
-            username: 'osmanportal',
-            password: '123',
+            username: User.username,
+            password: User.password,
           }),
         },
       )

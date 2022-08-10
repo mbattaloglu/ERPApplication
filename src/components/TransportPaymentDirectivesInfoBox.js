@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginVertical: 5,
     marginHorizontal: 10,
+    backgroundColor : "white",
   },
   titleBox: {
     width: 130,
