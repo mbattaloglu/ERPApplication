@@ -35,21 +35,10 @@ const BankStatement = ({navigation}) => {
 };
 
 export default BankStatement;
-/*
-renderItem={({ item }) => (
-                <TransportCardInfoBox 
-                carNo="-PLACEHOLDER-"
-                company = {item.SenderName}
-                orderId = {item.Oid}
-                date = {item.ShipmentDate.slice(0, 10)}
-                totalPackingQuantity = {item.TotalPackingQuantity}
-                boxStyle={(index % 2 == 0) ? styles.boxEven : styles.boxOdd}
-                />
-            )} */
 
 const styles = StyleSheet.create({
   boxOdd: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'lightgray',
   },
   boxEven: {
     backgroundColor: 'white',

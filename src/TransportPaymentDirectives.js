@@ -42,7 +42,7 @@ export default BankStatement;
 
 const styles = StyleSheet.create({
   boxOdd: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'lightgray',
   },
   boxEven: {
     backgroundColor: 'white',

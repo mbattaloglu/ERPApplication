@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 const TransportCardInfoBox = ({
@@ -10,48 +10,28 @@ const TransportCardInfoBox = ({
   boxStyle,
 }) => {
   return (
-    <View style={[styles.box, boxStyle]}>
+    <TouchableOpacity style={[styles.box, boxStyle]}>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Araç No</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{carNo}</Text>
-        </View>
+        <Text style={styles.titleText}>Araç No</Text>
+        <Text style={styles.text}>{carNo}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Firma</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{company}</Text>
-        </View>
+        <Text style={styles.titleText}>Firma</Text>
+        <Text style={styles.text}>{company}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Fiş Numarası</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{orderId}</Text>
-        </View>
+        <Text style={styles.titleText}>Fiş Numarası</Text>
+        <Text style={styles.text}>{orderId}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Tarih</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{date}</Text>
-        </View>
+        <Text style={styles.titleText}>Tarih</Text>
+        <Text style={styles.text}>{date}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Ambalaj</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{totalPackingQuantity}</Text>
-        </View>
+        <Text style={styles.titleText}>Ambalaj</Text>
+        <Text style={styles.text}>{totalPackingQuantity}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -59,31 +39,25 @@ export default TransportCardInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1,
-    marginVertical: 5,
+    borderWidth: 3,
+    borderRadius: 8,
+    marginVertical: 10,
     marginHorizontal: 10,
+    minHeight: 333,
   },
   line: {
-    flexDirection: 'row',
-    height: 40,
-    marginVertical: 5,
+    paddingLeft: 10,
+    minHeight: 40,
+    marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor : "white",
-  },
-  titleBox: {
-    width: 130,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
-  },
-  infoBox: {
-    flex: 1,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
   },
   text: {
     color: 'black',
+    paddingLeft: 10,
+  },
+  titleText: {
+    color: 'black',
     fontWeight: 'bold',
+    fontSize: 20,
   },
 });

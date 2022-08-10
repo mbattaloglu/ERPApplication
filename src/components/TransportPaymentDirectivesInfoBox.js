@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 
 const TransportPaymentDirectivesInfoBox = ({
@@ -11,56 +18,32 @@ const TransportPaymentDirectivesInfoBox = ({
   boxStyle,
 }) => {
   return (
-    <View style={[styles.box, boxStyle]}>
+    <TouchableOpacity style={[styles.box, boxStyle]}>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Tarih</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{date}</Text>
-        </View>
+        <Text style={styles.titleText}>Tarih</Text>
+        <Text style={styles.text}>{date}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Açıklama</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{description}</Text>
-        </View>
+        <Text style={styles.titleText}>Açıklama</Text>
+        <Text style={styles.text}>{description}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Talimat No</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{directiveNumber}</Text>
-        </View>
+        <Text style={styles.titleText}>Talimat No</Text>
+        <Text style={styles.text}>{directiveNumber}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Para Birimi</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{currency}</Text>
-        </View>
+        <Text style={styles.titleText}>Para Birimi</Text>
+        <Text style={styles.text}>{currency}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Talimat Tutarı</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{amount}</Text>
-        </View>
+        <Text style={styles.titleText}>Talimat Tutarı</Text>
+        <Text style={styles.text}>{amount}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={styles.text}>Onay Durumu</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.text}>{status}</Text>
-        </View>
+        <Text style={styles.titleText}>Onay Durumu</Text>
+        <Text style={styles.text}>{status}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -68,31 +51,25 @@ export default TransportPaymentDirectivesInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1,
-    marginVertical: 5,
+    borderWidth: 3,
+    borderRadius: 8,
+    marginVertical: 10,
     marginHorizontal: 10,
+    minHeight: 397,
   },
   line: {
-    flexDirection: 'row',
-    height: 40,
-    marginVertical: 5,
+    paddingLeft: 10,
+    minHeight: 40,
+    marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor : "white",
-  },
-  titleBox: {
-    width: 130,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
-  },
-  infoBox: {
-    flex: 1,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
   },
   text: {
     color: 'black',
+    paddingLeft: 10,
+  },
+  titleText: {
+    color: 'black',
     fontWeight: 'bold',
+    fontSize: 20,
   },
 });

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 const CustomerSuppliersInfoBox = ({
@@ -12,56 +12,32 @@ const CustomerSuppliersInfoBox = ({
   isDebt = false,
 }) => {
   return (
-    <View style={[styles.box, boxStyle]}>
+    <TouchableOpacity style={[styles.box, boxStyle, isDebt ? styles.debtBox : styles.receivingsBox]}>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Tarih</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{date}</Text>
-        </View>
+          <Text style={[styles.titleText]}>Tarih</Text>
+          <Text style={[styles.text]}>{date}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Açıklama</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{description}</Text>
-        </View>
+          <Text style={[styles.titleText]}>Açıklama</Text>
+          <Text style={[styles.text]}>{description}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Tipi</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{type}</Text>
-        </View>
+          <Text style={[styles.titleText]}>Tipi</Text>
+          <Text style={[styles.text]}>{type}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Talimat Numarası</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{oid}</Text>
-        </View>
+          <Text style={[styles.titleText]}>Talimat Numarası</Text>
+          <Text style={[styles.text]}>{oid}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Para Birimi</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{currency}</Text>
-        </View>
+          <Text style={[styles.titleText]}>Para Birimi</Text>
+          <Text style={[styles.text]}>{currency}</Text>
       </View>
       <View style={styles.line}>
-        <View style={styles.titleBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>Borç</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={[styles.text, isDebt ? styles.debtText : styles.receivingsText]}>{money}</Text>
-        </View>
+          <Text style={[styles.titleText]}>{isDebt ? ("Borç") : ("Alacak")}</Text>
+          <Text style={[styles.text]}>{money}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -69,35 +45,31 @@ export default CustomerSuppliersInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1,
+    borderWidth: 3,
+    borderRadius : 8,
     marginVertical: 5,
     marginHorizontal: 10,
+    minHeight : 325,
+  },
+  debtBox : {
+    borderColor : "red",
+  },
+  receivingsBox : {
+    borderColor : "green",
   },
   line: {
-    flexDirection: 'row',
-    height: 40,
-    marginVertical: 5,
+    paddingLeft: 10,
+    minHeight: 40,
+    marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor : "white",
   },
-  titleBox: {
-    width: 130,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
+  text: {
+    color: 'black',
+    paddingLeft : 10
   },
-  infoBox: {
-    flex: 1,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
-  },
-  debtText: {
-    color: 'red',
+  titleText: {
+    color: 'black',
     fontWeight: 'bold',
-  },
-  receivingsText: {
-    color: 'green',
-    fontWeight: 'bold',
+    fontSize : 20,
   },
 });
