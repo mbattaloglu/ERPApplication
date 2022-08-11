@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet } from "react-native";
 
 import ClickIcon from "../images/icons/Select.png"
@@ -39,6 +38,8 @@ const Api = {
 const User = {
     token: '',
     id: 97209,
+    username: '',
+    password: '',
 }
 
 const StylesAll = StyleSheet.create({

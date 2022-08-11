@@ -1,11 +1,16 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React from 'react';
 
-const InputField = ({title, safeTextEntry=false, command}) => {
+const InputField = ({title, safeTextEntry = false, onChangeHandler, value=""}) => {
   return (
     <View style={styles.inputBox}>
       <Text style={styles.title}>{title}</Text>
-      <TextInput style={styles.inputArea} secureTextEntry={safeTextEntry} onChangeText={command}/>
+      <TextInput
+        style={styles.inputArea}
+        secureTextEntry={safeTextEntry}
+        onChangeText={onChangeHandler}
+        value={value}
+      />
     </View>
   );
 };

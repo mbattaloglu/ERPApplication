@@ -1,8 +1,8 @@
-import {StyleSheet, Image, Text, View} from 'react-native';
+import { StyleSheet, Image, Text, View } from 'react-native';
 import React from 'react';
 import { Api, User } from '../components/Constants';
 
-const MainMenu = ({navigation}) => {
+const MainMenu = ({ navigation }) => {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [img, setImg] = React.useState();
@@ -10,7 +10,7 @@ const MainMenu = ({navigation}) => {
   React.useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
-        Api.link+'/odata/CustomerSuppliers',
+        Api.link + '/odata/CustomerSuppliers',
         {
           headers: {
             Authorization: 'Bearer ' + User.token,
@@ -35,7 +35,7 @@ const MainMenu = ({navigation}) => {
       const json = await data.json();
       const image = json.value;
       setImg(image);
-      
+
     };
 
     fetchData().catch(err => console.log(err));
@@ -48,13 +48,13 @@ const MainMenu = ({navigation}) => {
       {data ? (
         <View style={styles.imageBox}>
           <Image
-            source={{uri: `data:image/gif;base64,${img}`}}
+            source={{ uri: `data:image/gif;base64,${img}` }}
             style={styles.image}></Image>
           <Text style={styles.text}>{data.Oid}</Text>
           <Text style={styles.text}>{data.Code}</Text>
           <Text style={styles.text}>{data.Name}</Text>
           <Text style={styles.text}>{data.PhoneNumber}</Text>
-          <Text style={[{textAlign: 'left'}, styles.text]}>{data.Title}</Text>
+          <Text style={[{ textAlign: 'left' }, styles.text]}>{data.Title}</Text>
           <Text style={styles.text}>{data.CustomerSupplierType}</Text>
         </View>
       ) : (
@@ -80,5 +80,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: 'black',
+    marginBottom:5
   },
 });

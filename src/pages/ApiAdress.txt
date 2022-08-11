@@ -12,7 +12,7 @@ Toplam Ambalaj  :
 Toplam KG       : 
 Toplam Hacim    : 
 
-http://193.53.103.178:5312/api/odata/TransportCards?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity&$expand=TransportWaybill($select=declarationNumber)&$top=10
+"http://193.53.103.178:5312/api/odata/TransportCards?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity&$expand=TransportWaybill($select=declarationNumber)&$top=10"
 ----------------------------
 
 --- Müşteri Sevk Listesi (DETAY)---
@@ -45,7 +45,7 @@ Toplam Ambalaj  : TotalPackingQuantity
 Toplam KG       : TotalWeight
 Toplam Hacim    : TransportCardDetails > Volume | TotalVolume (Bozuk)
 
-"http://193.53.103.178:5312/api/odata/TransportCards?$top=1&$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight&$expand=SenderBranch($select=BranchName),ReceiverBranch($select=BranchName),TransportWaybill($select=declarationNumber),TransportCardDetails($expand=TransportProduct($select=Name),TransportUnitMultiplier($select=Name);$select=PackingQuantity,Quantity,Weight,Volume),TransportCardIncomes($expand=CurrencyType($select=Name);$select=IncomePaymentType,Amount),TransportShipperPlate($select=Plate)"
+"http://193.53.103.178:5312/api/odata/TransportCards/284?$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight&$expand=SenderBranch($select=BranchName),ReceiverBranch($select=BranchName),TransportWaybill($select=declarationNumber),TransportCardDetails($expand=TransportProduct($select=Name),TransportUnitMultiplier($select=Name);$select=PackingQuantity,Quantity,Weight,Volume),TransportCardIncomes($expand=CurrencyType($select=Name);$select=IncomePaymentType,Amount),TransportShipperPlate($select=Plate)"
 --------------------
 
 --- Talimatlarım ---
@@ -60,9 +60,9 @@ Onay Durumu     : TPDPaymentStatus
 
 ///////////Toplam Kutusu///////////
 
-Onay Bekleyen   :
-Onaylanan       :
-Ödenen          :
+Onay Bekleyen   : 
+Onaylanan       : 
+Ödenen          : 
 
 "http://193.53.103.178:5312/api/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 and Date le  2022-01-31T12:53:36Z&$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus"
 --- Hesap Ekstresi ---
@@ -75,9 +75,9 @@ Talimat Numarası: FinancialTrxs > Oid
 Para Birimi     : 
 Borç            : FinancialTrxs > Amount
 
-Borcu           :
-Alacağı         :
-Bakiye          :
+Borcu           : 
+Alacağı         : 
+Bakiye          : 
 
 "http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=FinancialTrxs($orderby=TrxDate;$select=TrxDate,LineDescription,SubType,Oid,Amount;$top=10)&$select=FinancialTrxs"
 ----------------------

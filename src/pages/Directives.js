@@ -29,28 +29,37 @@ const Directives = () => {
     }, [])
 
     return (
-        <View style={{ alignItems: 'center', flex: 1 }}>
-            <FlatList
-                data={items}
-                onEndReached={() => GetData()}
-                onEndReachedThreshold={3}
-                renderItem={({ item, index }) => (
-                    <DirectivesBox
-                        date={item.Date.slice(0, 10)}
-                        desc={item.Desc}
-                        directiveNo={item.Code}
-                        unit={"Bilinmiyor"} // Manual !!!!!
-                        directiveAmount={parseFloat(item.Amount).toLocaleString()} 
-                        paymentStatus={item.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'}
-                        backColor={index % 2 == 0 ? 'darkgray' : 'lightblue'}
+        <View style={{ flex: 1 }}>
+            {items.length > 0 ? (
+                <View style={{ alignItems: 'center', flex: 1 }}>
+                    <FlatList
+                        data={items}
+                        onEndReached={() => GetData()}
+                        onEndReachedThreshold={3}
+                        renderItem={({ item, index }) => (
+                            <DirectivesBox
+                                date={item.Date.slice(0, 10)}
+                                desc={item.Desc}
+                                directiveNo={item.Code}
+                                unit={"Bilinmiyor"} // Manual !!!!!
+                                directiveAmount={parseFloat(item.Amount).toLocaleString()}
+                                paymentStatus={item.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'}
+                                backColor={index % 2 == 0 ? 'darkgray' : 'lightblue'}
+                            />
+                        )}
                     />
-                )}
-            />
-            <TotalBox
-                mainTop={["Onay Bekleyen", ]}
-                mainMiddle={["Onaylanan", ]}
-                mainBottom={["Ödenen", ]}
-            />
+                    <TotalBox
+                        mainTop={["Onay Bekleyen",]}
+                        mainMiddle={["Onaylanan",]}
+                        mainBottom={["Ödenen",]}
+                    />
+
+                </View>
+            ) : (
+                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize:20 }}>Yükleniyor...</Text>
+                </View>
+            )}
 
         </View>
     )
