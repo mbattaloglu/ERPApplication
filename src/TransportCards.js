@@ -1,10 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
+import {StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import TransportCardInfoBox from './components/TransportCardInfoBox';
 import {User} from './constants/Constants';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
 const BankStatement = ({navigation}) => {
   const [data, setData] = useState([]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={[{marginRight: 10}]} onPress={filterHandler}>
+          <FeatherIcons name="filter" size={24} color="white" />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
   useEffect(() => {
     fetch(User.API + '/api/odata/TransportCards?$top=5&', {
       headers: {
@@ -16,6 +28,10 @@ const BankStatement = ({navigation}) => {
       .then(res => res.value)
       .then(res => setData(res));
   }, []);
+
+  const filterHandler = () => {
+    alert('Filter');
+  };
 
   return (
     <FlatList

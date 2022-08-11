@@ -9,17 +9,14 @@ const Login = ({tab}) => {
   const [loading, setLoading] = useState(true);
   React.useEffect(() => {
     const loginHandler = async () => {
-      const token = await fetch(
-        User.API+"/api/Authentication",
-        {
-          method: 'POST',
-          headers: {'Content-type': 'application/json'},
-          body: JSON.stringify({
-            username: User.username,
-            password: User.password,
-          }),
-        },
-      )
+      const token = await fetch(User.API + '/api/Authentication', {
+        method: 'POST',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify({
+          username: User.username,
+          password: User.password,
+        }),
+      })
         .then(res => res.json())
         .then(res => res.token)
         .catch(error => console.log(error));
@@ -50,7 +47,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color : "black"
+    color: 'black',
   },
 });
 

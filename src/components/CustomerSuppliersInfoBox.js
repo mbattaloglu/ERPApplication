@@ -12,30 +12,35 @@ const CustomerSuppliersInfoBox = ({
   isDebt = false,
 }) => {
   return (
-    <TouchableOpacity style={[styles.box, boxStyle, isDebt ? styles.debtBox : styles.receivingsBox]}>
+    <TouchableOpacity
+      style={[
+        styles.box,
+        boxStyle,
+        isDebt ? styles.debtBox : styles.receivingsBox,
+      ]}>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>Tarih</Text>
-          <Text style={[styles.text]}>{date}</Text>
+        <Text style={[styles.titleText]}>Tarih</Text>
+        <Text style={[styles.text]}>{date}</Text>
       </View>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>Açıklama</Text>
-          <Text style={[styles.text]}>{description}</Text>
+        <Text style={[styles.titleText]}>Açıklama</Text>
+        <Text style={[styles.text]}>{description}</Text>
       </View>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>Tipi</Text>
-          <Text style={[styles.text]}>{type}</Text>
+        <Text style={[styles.titleText]}>Tipi</Text>
+        <Text style={[styles.text]}>{type}</Text>
       </View>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>Talimat Numarası</Text>
-          <Text style={[styles.text]}>{oid}</Text>
+        <Text style={[styles.titleText]}>Talimat Numarası</Text>
+        <Text style={[styles.text]}>{oid}</Text>
       </View>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>Para Birimi</Text>
-          <Text style={[styles.text]}>{currency}</Text>
+        <Text style={[styles.titleText]}>Para Birimi</Text>
+        <Text style={[styles.text]}>{currency}</Text>
       </View>
       <View style={styles.line}>
-          <Text style={[styles.titleText]}>{isDebt ? ("Borç") : ("Alacak")}</Text>
-          <Text style={[styles.text]}>{money}</Text>
+        <Text style={[styles.titleText]}>{isDebt ? 'Borç' : 'Alacak'}</Text>
+        <Text style={[styles.text]}>{money}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -45,17 +50,17 @@ export default CustomerSuppliersInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 3,
-    borderRadius : 8,
+    borderWidth: 1.5,
+    borderRadius: 8,
     marginVertical: 5,
     marginHorizontal: 10,
-    minHeight : 325,
+    minHeight: 325,
   },
-  debtBox : {
-    borderColor : "red",
+  debtBox: {
+    borderColor: 'red',
   },
-  receivingsBox : {
-    borderColor : "green",
+  receivingsBox: {
+    borderColor: 'green',
   },
   line: {
     paddingLeft: 10,
@@ -65,11 +70,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'black',
-    paddingLeft : 10
+    paddingLeft: 10,
   },
   titleText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize : 20,
+    fontSize: 20,
   },
 });

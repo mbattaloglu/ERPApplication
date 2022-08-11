@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
   boxStyle: {
     backgroundColor: '#2196F3',
     borderRadius: 5,
+    padding: 12,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    padding: 12,
   },
   titleStyle: {
     fontSize: 18,

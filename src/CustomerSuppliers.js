@@ -1,11 +1,23 @@
-import React from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import React, {useLayoutEffect, useEffect, useState} from 'react';
+import {StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {User} from './constants/Constants';
 import CustomerSuppliersInfoBox from './components/CustomerSuppliersInfoBox';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
 const CustomerSuppliers = ({navigation}) => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
+  const [data, setData] = useState([]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={[{marginRight: 10}]} onPress={filterHandler}>
+          <FeatherIcons name="filter" size={24} color="white" />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
         User.API + '/api/odata/customerSuppliers/97209?&$expand=FinancialTrxs',
@@ -22,6 +34,10 @@ const CustomerSuppliers = ({navigation}) => {
     fetchData().catch(err => console.log(err));
   }, []);
 
+  const filterHandler = () => {
+    alert('Filter');
+  };
+
   return (
     <FlatList
       data={data}
@@ -33,7 +49,7 @@ const CustomerSuppliers = ({navigation}) => {
           oid={item.oid}
           currency={'-PLACEHOLDER-'}
           money={item.Debit}
-          isDebt={item.SubType === "Receipt" ? false : true}
+          isDebt={item.SubType === 'Receipt' ? false : true}
           boxStyle={index % 2 == 0 ? styles.boxEven : styles.boxOdd}
         />
       )}

@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, TouchableOpacity, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,7 +19,6 @@ import TransportPaymentDirectives from './src/TransportPaymentDirectives';
 import CustomerSuppliers from './src/CustomerSuppliers';
 import Settings from './src/Settings';
 
-const MainStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
