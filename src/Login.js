@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ToastAndroid} from 'react-native';
 import {AuthContext} from '../Context';
 import {User} from './constants/Constants';
 
@@ -19,12 +19,12 @@ const Login = ({tab}) => {
       })
         .then(res => res.json())
         .then(res => res.token)
-        .catch(error => console.log(error));
+        .catch(error => alert(error));
       if (token) {
         signIn({token});
         setLoading(false);
       } else {
-        alert('Kullanıcı adı veya şifre hatalı');
+        ToastAndroid.show('Kullanıcı adı veya şifre hatalı', ToastAndroid.SHORT);
       }
     };
 

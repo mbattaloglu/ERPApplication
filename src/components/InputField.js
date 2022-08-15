@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
   },
   inputArea: {
     borderBottomWidth: 1,
-    borderBottomColor: 'gray',
+    borderBottomColor: 'black',
     padding: 5,
+    color: '#000000',
   },
 });

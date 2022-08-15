@@ -50,7 +50,7 @@ export default CustomerSuppliersInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1.5,
+    borderWidth: 2.5,
     borderRadius: 8,
     marginVertical: 5,
     marginHorizontal: 10,

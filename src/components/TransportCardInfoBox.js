@@ -39,7 +39,7 @@ export default TransportCardInfoBox;
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1.5,
+    borderWidth: 2.5,
     borderRadius: 8,
     marginVertical: 10,
     marginHorizontal: 10,
