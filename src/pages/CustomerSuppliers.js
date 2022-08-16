@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList, Text, StyleSheet } from "react-native";
 import SuppliersBox from "../components/Box/SuppliersBox";
 import TotalBox from "../components/TotalBox";
-import { User } from "../components/Constants";
+import { User, ThemeColors } from "../components/Constants";
+import { toAmount } from "../components/ConstFunctions";
+import SupplierLineBox from "../components/Box/SupplierLineBox";
 
 var i = 0;
 
@@ -43,7 +45,7 @@ const CustomerSuppliers = ({ navigation }) => {
     const [items, setItems] = useState([]);
 
     const GetData = () => {
-        fetch('http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=FinancialTrxs($orderby=TrxDate;$select=TrxDate,LineDescription,SubType,Oid,Amount;$top=10;$skip=' + i + ')&$select=FinancialTrxs', {
+        fetch('http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name),FinancialTrxs($orderby=TrxDate;$select=TrxDate,LineDescription,SubType,Oid,Amount;$top=10;$skip=' + i + ')&$select=FinancialTrxs', {
             method: 'GET', /* or POST/PUT/PATCH/DELETE */
             headers: {
                 'Authorization': 'Bearer ' + User.token,
@@ -64,27 +66,24 @@ const CustomerSuppliers = ({ navigation }) => {
         <View style={{ flex: 1 }}>
             {items.length > 0 ? (
                 <View style={{ alignItems: 'center', flex: 1 }}>
+                    <HeaderLine />
                     <FlatList
                         data={items}
                         onEndReached={() => GetData()}
                         onEndReachedThreshold={3}
                         renderItem={({ item, index }) => (
-                            <SuppliersBox
+                            <SupplierLineBox
                                 date={item.TrxDate.slice(0, 10)}
-                                desc={item.LineDescription}
+                                desc={item.LineDescription.slice(0,18)}
                                 subType={item.SubType}
                                 oid={item.Oid}
-                                amount={parseFloat(item.Amount).toLocaleString()}
-                                paymentStatus={item.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'}
-                                backColor={index % 2 == 0 ? 'darkgray' : 'lightblue'}
+                                currencyType={User.defaultCurrencyType}
+                                amount={item.Amount}
+                                backColor={index % 2 == 0 ? '#FEFFFF' : '#F4F4F4'}
                             />
                         )}
                     />
-                    <TotalBox
-                        mainTop={["Borcu", totalDebit]}
-                        mainMiddle={["Alacağı", totalCredit]}
-                        mainBottom={["Bakiye", totalBakiye]}
-                    />
+                    <BottomLine totalDebit={totalDebit} totalCredit={totalCredit} totalBakiye={totalBakiye}/>
                 </View>
             ) : (
                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
@@ -96,5 +95,77 @@ const CustomerSuppliers = ({ navigation }) => {
         </View>
     )
 }
+
+const HeaderLine = () => {
+    return (
+        <View style={{ alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
+                <View style={[styles.box, { borderLeftWidth: 0 }]}>
+                    <Text style={styles.textStyle}>Tarih</Text>
+                </View>
+                <View style={[styles.box, { flex: 1 }]}>
+                    <Text style={styles.textStyle}>Tipi</Text>
+                </View>
+                <View style={[styles.box, , { flex: 1 }]}>
+                    <Text style={styles.textStyle}>Açıklama</Text>
+                </View>
+                <View style={styles.box}>
+                    <Text style={styles.textStyle}>Talimat No</Text>
+                </View>
+                <View style={styles.box}>
+                    <Text style={styles.textStyle}>Tutar</Text>
+                </View>
+                <View style={[styles.box, {flex: .4}]}>
+                    <Text style={styles.textStyle}>B/A</Text>
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const BottomLine = ({ totalDebit, totalCredit, totalBakiye }) => {
+    return (
+        <View style={{ alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar, borderColor: 'gray' }}>
+                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
+                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Borcu</Text>
+                </View>
+                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
+                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Alacağı</Text>
+                </View>
+                <View style={[styles.box, { borderWidth: .5 }]}>
+                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Bakiye</Text>
+                </View>
+            </View>
+            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar, borderColor: 'gray' }}>
+                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
+                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totalDebit)}</Text>
+                </View>
+                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
+                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totalCredit)}</Text>
+                </View>
+                <View style={[styles.box, { borderWidth: .5 }]}>
+                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totalBakiye)}</Text>
+                </View>
+            </View>
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    box: {
+        height: 30,
+        flex: 1,
+        justifyContent: 'center',
+        borderLeftWidth: .5,
+        borderColor: 'gray' // Renk değiştir
+    },
+    textStyle: {
+        textAlign: 'center',
+        fontSize: 12,
+        color: 'white',
+        fontWeight: '600'
+    }
+})
 
 export default CustomerSuppliers;

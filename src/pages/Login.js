@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AuthContext } from '../../Context';
-import { Api } from '../components/Constants';
+import { Api, User } from '../components/Constants';
 
 const Login = ({ tab }) => {
   const { signIn } = useContext(AuthContext);

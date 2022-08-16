@@ -1,0 +1,13 @@
+Hesap Ekstresi;
+- Filtreleme çalışmıyor (API) // Boş dizi veriyor
+- Toplama çalışmıyor (API) // Groupby kullanmamı istiyor.
++ Sıralamada sorun yok!
+
+Müşteri Sevk Listesi
+- Toplama çalışmıyor (API) // Groupby kullanmamı istiyor.
+
+Talimatlarım;
+- Toplama çalışmıyor (API) // Groupby kullanmamı istiyor.
+
+
+Filtre ile birlikte toplama işlemi yapmıyor. Groupby isteniyor.

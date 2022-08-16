@@ -11,7 +11,6 @@ const TotalBox = ({ mainTop, mainMiddle, mainBottom }) => {
             alignItems: 'center',
             paddingVertical: 3,
             borderWidth: 2,
-            marginHorizontal: 21
         }}>
             <LineBox main={mainTop[0]} desc={mainTop[1]} />
             <LineBox main={mainMiddle[0]} desc={mainMiddle[1]} />

@@ -68,7 +68,7 @@ const App = () => {
               name="TransportList"
               component={TransportList}
               options={{
-                title: 'Sevk Listesi',
+                title: 'Müşteri Sevk Listesi',
                 headerStyle: {
                   backgroundColor: ThemeColors.HeaderBar,
                 },

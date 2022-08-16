@@ -54,7 +54,7 @@ Toplam Hacim    : TransportCardDetails > Volume | TotalVolume (Bozuk)
 Tarih           : Date
 Açıklama        : Desc
 Talimat No      : Code
-Para Birimi     : 
+Para Birimi     : CurrencyType > Name
 Talimat Tutarı  : Amount
 Onay Durumu     : TPDPaymentStatus
 
@@ -72,7 +72,7 @@ Tarih           : FinancialTrxs > TrxDate
 Açıklama        : FinancialTrxs > LineDescription
 Tipi            : FinancialTrxs > SubType
 Talimat Numarası: FinancialTrxs > Oid
-Para Birimi     : 
+Para Birimi     : DefaultCurrencyType > Name
 Borç            : FinancialTrxs > Amount
 
 Borcu           : 

@@ -1,16 +1,20 @@
 import { StyleSheet, Image, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Api, User } from '../components/Constants';
 
 const MainMenu = ({ navigation }) => {
-  const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [img, setImg] = React.useState();
+
+  useEffect(() => { //Performans: 2 kez çekiyor.
+    User.id = data.Oid;
+    User.defaultCurrencyType = data?.DefaultCurrencyType?.Name;
+  }, [data])
 
   React.useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
-        Api.link + '/odata/CustomerSuppliers',
+        Api.link + '/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name)',
         {
           headers: {
             Authorization: 'Bearer ' + User.token,
@@ -40,7 +44,6 @@ const MainMenu = ({ navigation }) => {
 
     fetchData().catch(err => console.log(err));
     fetchImage().catch(err => console.log(err));
-    setLoading(false);
   }, []);
 
   return (
@@ -80,6 +83,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: 'black',
-    marginBottom:5
+    marginBottom: 5
   },
 });
