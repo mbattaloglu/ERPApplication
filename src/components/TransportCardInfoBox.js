@@ -8,9 +8,10 @@ const TransportCardInfoBox = ({
   date,
   totalPackingQuantity,
   boxStyle,
+  onClickHandler
 }) => {
   return (
-    <TouchableOpacity style={[styles.box, boxStyle]}>
+    <TouchableOpacity style={[styles.box, boxStyle]} onPress={onClickHandler}>
       <View style={styles.line}>
         <Text style={styles.titleText}>Araç No</Text>
         <Text style={styles.text}>{carNo}</Text>

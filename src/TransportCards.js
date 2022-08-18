@@ -18,12 +18,16 @@ const BankStatement = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    fetch(User.API + '/api/odata/TransportCards?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity&$expand=TransportWaybill($select=declarationNumber)&$top=5', {
-      headers: {
-        Authorization: 'Bearer ' + User.token,
-        'Content-Type': 'application/json',
+    fetch(
+      User.API +
+        '/api/odata/TransportCards?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity&$expand=TransportWaybill($select=declarationNumber)',
+      {
+        headers: {
+          Authorization: 'Bearer ' + User.token,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
       .then(res => res.json())
       .then(res => res.value)
       .then(res => setData(res));
@@ -33,6 +37,11 @@ const BankStatement = ({navigation}) => {
     alert('Filter');
   };
 
+  function onClickHandler(oid) {
+    const id = oid;
+    console.log("id:" + id);
+    navigation.navigate('TransportCardDetail', {oid : id});
+  }
 
   return (
     <FlatList
@@ -42,9 +51,10 @@ const BankStatement = ({navigation}) => {
           carNo={item.TransportWaybill.declarationNumber}
           company={item.SenderName}
           orderId={item.Oid}
-          date={item.DocumentDate.slice(8,10) + "." + item.DocumentDate.slice(5,7) + "." + item.DocumentDate.slice(0,4)}
+          date={item.DocumentDate.slice(8, 10) + '.' + item.DocumentDate.slice(5, 7) + '.' + item.DocumentDate.slice(0, 4)}
           totalPackingQuantity={item.TotalPackingQuantity}
           boxStyle={index % 2 == 0 ? styles.boxEven : styles.boxOdd}
+          onClickHandler={() => onClickHandler(item.Oid)}
         />
       )}
     />

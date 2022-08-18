@@ -14,10 +14,10 @@ import {User, ThemeColors} from './src/constants/Constants';
 
 import Login from './src/Login';
 import MainMenu from './src/Home';
-import TransportCards from './src/TransportCards';
 import TransportPaymentDirectives from './src/TransportPaymentDirectives';
 import CustomerSuppliers from './src/CustomerSuppliers';
 import Settings from './src/Settings';
+import TransportCardStack from './src/TransportCardStack';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,15 +69,11 @@ const App = () => {
                 component={MainMenu}
               />
               <Tab.Screen
-                name="TransportCards"
-                component={TransportCards}
+                name="TransportCardStack"
+                component={TransportCardStack}
                 options={{
-                  title: 'Müşteri Sevk Listesi',
-                  headerStyle: {
-                    backgroundColor: ThemeColors.HeaderBar,
-                  },
-                  headerTintColor: 'white',
-                  headerTitleAlign: 'center',
+                  title : 'Müşteri Sevk Listesi',
+                  headerShown : false,
                   tabBarIcon: ({focused}) => (
                     <FontAwesome5Icons
                       name="shipping-fast"

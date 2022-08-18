@@ -23,6 +23,7 @@ const Login = ({tab}) => {
       if (token) {
         signIn({token});
         setLoading(false);
+        console.log(token)
       } else {
         ToastAndroid.show('Kullanıcı adı veya şifre hatalı', ToastAndroid.SHORT);
       }
