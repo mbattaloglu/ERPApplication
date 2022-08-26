@@ -12,11 +12,45 @@ import { AuthContext } from "./Context";
 import CustomerSuppliers from "./src/pages/CustomerSuppliers";
 import Directives from "./src/pages/Directives";
 import TransportList from "./src/pages/TransportList";
+import TransportDetails from "./src/pages/TransportDetails";
 import Settings from "./src/pages/Settings";
 import Filter from "./src/pages/Filter";
 //#endregion
 
-//const MainStack = createNativeStackNavigator();
+const TransportStack = createNativeStackNavigator();
+
+const TransportScreen = () => {
+  return (
+    <TransportStack.Navigator screenOptions={{
+      headerShown: true
+    }}>
+      <TransportStack.Screen 
+        name="TransportList"
+        component={TransportList}
+        options={{
+          title: 'Müşteri Sevk Listesi',
+                headerStyle: {
+                  backgroundColor: ThemeColors.transportList.HeaderBar,
+                },
+                headerTintColor: 'white',
+                headerTitleAlign: 'center',
+        }}
+      />
+      <TransportStack.Screen 
+        name="TransportDetails"
+        component={TransportDetails}
+        options={{
+          title: 'Sevk Detayları',
+                headerStyle: {
+                  backgroundColor: ThemeColors.transportList.HeaderBar,
+                },
+                headerTintColor: 'white',
+                headerTitleAlign: 'center',
+        }}
+      />
+    </TransportStack.Navigator>
+  )
+}
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,7 +77,7 @@ const App = () => {
           <Tab.Navigator
             initialRouteName="MainMenu"
             screenOptions={{
-              tabBarActiveTintColor: ThemeColors.HeaderBar,
+              tabBarActiveTintColor: 'gray',
             }}>
             <Tab.Screen
               name="MainMenu"
@@ -51,33 +85,29 @@ const App = () => {
               options={{
                 title: 'Ana Menü',
                 headerStyle: {
-                  backgroundColor: ThemeColors.HeaderBar,
+                  backgroundColor: ThemeColors.Home.HeaderBar,
                 },
                 headerTintColor: 'white',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={Icons.home}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
                   />
                 )
               }}
 
             />
             <Tab.Screen
-              name="TransportList"
-              component={TransportList}
+              name="TransportScreen"
+              component={TransportScreen}
               options={{
-                title: 'Müşteri Sevk Listesi',
-                headerStyle: {
-                  backgroundColor: ThemeColors.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
+                title: 'Sevk Listesi',
+                headerShown: false,
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={Icons.transport}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.HeaderBar : 'gray' }]}
                   />
                 ),
               }}
@@ -88,14 +118,14 @@ const App = () => {
               options={{
                 title: 'Talimatlarım',
                 headerStyle: {
-                  backgroundColor: ThemeColors.HeaderBar,
+                  backgroundColor: ThemeColors.directives.HeaderBar,
                 },
                 headerTintColor: 'white',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={Icons.directive}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.HeaderBar : 'gray' }]}
                   />
                 ),
               }}
@@ -106,14 +136,14 @@ const App = () => {
               options={{
                 title: 'Hesap Ekstresi',
                 headerStyle: {
-                  backgroundColor: ThemeColors.HeaderBar,
+                  backgroundColor: ThemeColors.customerSuppliers.HeaderBar,
                 },
                 headerTintColor: 'white',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={Icons.suppliers}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.HeaderBar : 'gray' }]}
                   />
                 ),
               }}
@@ -124,14 +154,14 @@ const App = () => {
               options={{
                 title: 'Ayarlar',
                 headerStyle: {
-                  backgroundColor: ThemeColors.HeaderBar,
+                  backgroundColor: ThemeColors.Home.HeaderBar,
                 },
                 headerTintColor: 'white',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={Icons.settings}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
                   />
                 ),
               }}

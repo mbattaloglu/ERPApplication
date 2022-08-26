@@ -1,16 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import TransportBox from "../components/Box/TransportBox";
-import { User, Api, Icons, ThemeColors } from "../components/Constants";
-import TotalBox from "../components/TotalBox";
-import Filter from "./Filter";
-import { TransportContext } from "../../Context";
-import { toAmount } from "../components/ConstFunctions";
-import LineBox from "../components/Box/LineBox";
+import React, { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { User, Api, ThemeColors } from "../components/Constants";
+
+import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
+
 
 var i = 0;
-var v = false;
 
+// Çift Sevk Kalemi 33714
 
 const filtersTitle = [
     startDate = 'DocumentDate ge ',
@@ -28,8 +25,6 @@ const filtersList2 = [
 ]
 
 const TransportList = ({ navigation }) => {
-
-    const asd = null;
 
     const GetTotal = () => {
         fetch('http://193.53.103.178:5312/api/odata/TransportCards?$apply=aggregate(TotalPackingQuantity with sum as Packing, TotalWeight with sum as Weight)',
@@ -71,12 +66,6 @@ const TransportList = ({ navigation }) => {
         return all;
     }
 
-    function doFilter(list) {
-        i = 0;
-        console.log("asda: ", list)
-        setExpand(Filters(list));
-    }
-
     useEffect(() => {
         console.log("DEĞİŞTİ: ", expand)
     }, [expand])
@@ -101,197 +90,133 @@ const TransportList = ({ navigation }) => {
                 },
             })
             .then(res => res.json())
-            .then(res => setItems([...items, ...res.value]))
+            .then(res => res.value)
+            .then(res => setItems([...items, ...EditDatas(res)]))
             .then(i = i + 20)
             .catch((e) => console.log(e));
 
     }
+
 
     useEffect(() => {
         GetTotal();
         GetData();
     }, [])
 
-    //#region Deneme
+    const titles = [
+        { // Tarih
+            text: 'Tarih',
+            flex: 1.2
+        },
+        { // Firma
+            text: 'Firma',
+            flex: 1.8
+        },
+        { // Fiş No
+            text: 'Fiş No',
+            flex: .7
+        },
+        { // Araç No
+            text: 'Araç No',
+        },
+        { // Ambalaj
+            text: 'Ambalaj',
+        }
+    ]
 
+    const boxStyles = [
+        { // Tarih
+            flex: 1.2
+        },
+        { // Firma
+            textAlign: 'left',
+            numberOfLines: 2,
+            flex: 1.8,
+        },
+        { // Fiş No
+            ellipsizeMode: 'head',
+            textAlign: 'right',
+            flex: .7
+        },
+        { // Araç No
 
-    //#endregion
+        },
+        { // Ambalaj
+
+        },
+
+    ]
+
+    const bottomList = [
+        {
+            text: 'Toplam Çuval',
+            amount: '0'
+        },
+        {
+            text: 'Toplam KG',
+            amount: '0'
+        },
+    ]
 
     return (
-        <View style={{ alignItems: 'center', flex: 1 }}>
-            {items.length > 0 ? (
-                <>
-                    {edit ? (
-                        <View style={{ alignItems: 'center' }}>
-                            <Filter onFilter={(val) => [doFilter(Filters(val)), setEdit(false)]} onCancel={() => { /* setEdit(false) */ getVehicles() }} />
-                            <View style={{ width: 350, height: 270, marginBottom: 15 }}>
-                                <FlatList
-                                    data={vehicles}
-                                    showsHorizontalScrollIndicator={false}
-                                    keyboardShouldPersistTaps={"handled"}
-                                    renderItem={({ item }) => (
-                                        <View style={{ borderWidth: 1, marginBottom: 10 }}>
-                                            <Text style={{ fontSize: 25, color: 'orange', textAlign: 'center' }}>{item}</Text>
-                                        </View>
-                                    )}
-                                />
-                            </View>
-                        </View>
-                    ) : (
-                        <View style={{ alignItems: 'center' }}>
-                            <HeaderLine />
-                            <FlatList // Do it: VirtualizeList
-                                data={items}
-                                onEndReached={() => GetData()}
-                                onEndReachedThreshold={3}
-                                renderItem={({ item, index }) => (
-                                    <LineBox
-                                        vehicleNo={item.TransportWaybill.declarationNumber}
-                                        company={item.SenderName}
-                                        oid={item.Oid}
-                                        date={item.DocumentDate.slice(0, 10)} // Not sure
-                                        packing={item.TotalPackingQuantity}
-                                        backColor={index % 2 == 0 ? '#FEFFFF' : '#F4F4F4'}
-                                    />
-                                )}
+        <>
+            {
+                items.length > 0 ? (
+                    <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                        <HeaderLine titles={titles} col={ThemeColors.transportList.SubHeaderBar} />
+                        <View style={{ flex: 1 }}>
+                            <MiddleLine
+                                items={items}
+                                boxStyles={boxStyles}
+                                onEnd={() => GetData()}
+                                canClick
+                                command={(oid) => navigation.navigate('TransportDetails', {oid})}
                             />
-                            <BottomLine totals={totals}/>
                         </View>
-                    )}
-                </>
-            ) : (
-                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
-                </View>
-            )
+                        <BottomLine items={bottomList} col={ThemeColors.transportList.SubHeaderBar} />
+                    </View>
+                ) : (
+                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
+                    </View>
+                )
             }
-
-
-        </View >
-
-
+        </>
     )
 }
 
-const HeaderLine = () => {
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderLeftWidth: 0 }]}>
-                    <Text style={styles.textStyle}>Tarih</Text>
-                </View>
-                <View style={[styles.box, { flex: 2 }]}>
-                    <Text style={styles.textStyle}>Firma</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Fiş No</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Araç No</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Ambalaj</Text>
-                </View>
-            </View>
-        </View>
-    )
-}
-
-const BottomLine = ({totals}) => {
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Toplam Çuval</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5 }]}>
-                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Toplam KG</Text>
-                </View>
-            </View>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle]}>{toAmount(totals.Packing)}</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5 }]}>
-                    <Text style={[styles.textStyle]}>{toAmount(totals.Weight)}</Text>
-                </View>
-            </View>
-        </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    box: {
-        height: 30,
-        flex: 1,
-        justifyContent: 'center',
-        borderLeftWidth: .5
-    },
-    textStyle: {
-        textAlign: 'center',
-        fontSize: 12,
-        color: 'white',
-        fontWeight: '600'
+function EditDatas(datas) {
+    if (typeof (datas) !== "object") {
+        console.log("HATA: Girilen veri bir obje değil. Mevcut Tipi: ", typeof (datas))
+        return null;
     }
-})
-
-const Eski = () => {
-    return (
-        <View style={{ alignItems: 'center', flex: 1 }}>
-            {items.length > 0 ? (
-                <>
-                    {edit ? (
-                        <View style={{ alignItems: 'center' }}>
-                            <Filter onFilter={(val) => [doFilter(Filters(val)), setEdit(false)]} onCancel={() => { /* setEdit(false) */ getVehicles() }} />
-                            <View style={{ width: 350, height: 270, marginBottom: 15 }}>
-                                <FlatList
-                                    data={vehicles}
-                                    showsHorizontalScrollIndicator={false}
-                                    keyboardShouldPersistTaps={"handled"}
-                                    renderItem={({ item }) => (
-                                        <View style={{ borderWidth: 1, marginBottom: 10 }}>
-                                            <Text style={{ fontSize: 25, color: 'orange', textAlign: 'center' }}>{item}</Text>
-                                        </View>
-                                    )}
-                                />
-                            </View>
-                        </View>
-                    ) : (
-                        <>
-                            <FlatList // Do it: VirtualizeList
-                                data={items}
-                                onEndReached={() => GetData()}
-                                onEndReachedThreshold={3}
-                                renderItem={({ item, index }) => (
-                                    <TransportBox
-                                        vehicleNo={item.TransportWaybill.declarationNumber}
-                                        company={item.SenderName}
-                                        oid={item.Oid}
-                                        date={item.DocumentDate.slice(0, 10)} // Not sure
-                                        packing={item.TotalPackingQuantity}
-                                        backColor={index % 2 == 0 ? 'darkgray' : 'lightblue'}
-                                    />
-                                )}
-                            />
-                            <TouchableOpacity style={{ height: 50, width: 50, backgroundColor: 'tomato', borderRadius: 25, }} onPress={() => setEdit(true)} />
-                            <TotalBox
-                                mainTop={["Toplam Çuval", toAmount(totals.Packing)]}
-                                mainMiddle={["Toplam KG", toAmount(totals.Weight)]}
-                                mainBottom={["Toplam Hacim",]}
-                            />
-                        </>
-                    )}
-                </>
-            ) : (
-                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
-                </View>
-            )
-            }
-
-
-        </View >
-    )
+    var newData = [];
+    let l = Object.keys(datas).length
+    for (let i = 0; i < l; i++) {
+        const temp = datas[i];
+        newData.push(
+            [
+                [
+                    { // Tarih
+                        title: temp.DocumentDate.slice(0, 10),
+                    },
+                    { // Firma
+                        title: temp.SenderName,
+                    },
+                    { // Fiş No
+                        title: temp.Oid,
+                    },
+                    { // Araç No
+                        title: temp.TransportWaybill.declarationNumber,
+                    },
+                    { // Ambalaj
+                        title: temp.TotalPackingQuantity
+                    },
+                ]
+            ]
+        )
+    }
+    return newData;
 }
 
 export default TransportList;

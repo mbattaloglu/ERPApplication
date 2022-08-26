@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
-import DirectivesBox from "../components/Box/DirectivesBox";
+import { View, Text } from "react-native";
 import { User, Api, ThemeColors } from "../components/Constants";
-import TotalBox from "../components/TotalBox";
 import { toAmount } from "../components/ConstFunctions";
-import LineBox from "../components/Box/LineBox";
-import DirectineLineBox from "../components/Box/DirectiveLineBox";
+
+import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
+
 
 var i = 0;
 // http://193.53.103.178:5312/api/odata/TransportPaymentDirectives/97209/GetCustomerTransportPaymentDirective(Date>'2022-01-01 00:00:00' & Date<'2022-01-31 23:59:59')
@@ -23,113 +22,130 @@ const Directives = () => {
                 },
             })
             .then(res => res.json())
-            .then(res => setItems([...items, ...res.value]))
+            .then(res => res.value)
+            .then(res => setItems([...items, ...EditDatas(res)]))
             .then(i = i + 10)
+            .catch((err) => console.log(err))
     }
 
     useEffect(() => {
         GetData();
     }, [])
 
-    return (
-        <View style={{ flex: 1 }}>
-            {items.length > 0 ? (
-                <View style={{ alignItems: 'center', flex: 1 }}>
-                    <HeaderLine />
-                    <FlatList
-                        data={items}
-                        onEndReached={() => GetData()}
-                        onEndReachedThreshold={3}
-                        renderItem={({ item, index }) => (
-                            <DirectineLineBox
-                                date={item.Date.slice(0, 10)}
-                                desc={item.Desc}
-                                directiveNo={item.Code}
-                                unit={item.CurrencyType.Name} // Manual !!!!!
-                                directiveAmount={toAmount(item.Amount)}
-                                paymentStatus={item.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'}
-                                backColor={index % 2 == 0 ? '#FEFFFF' : '#F4F4F4'}
-                            />
-                        )}
-                    />
-                    <BottomLine />
-                </View>
-            ) : (
-                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
-                </View>
-            )}
+    const titles = [
+        { // Tarih
+            text: 'Tarih',
+            flex: 1.1
+        },
+        { // Talimat No
+            text: 'Talimat No',
+            flex: .7
+        },
+        { // Açıklama
+            text: 'Açıklama',
+            flex: 1.3
+        },
+        { // Tutar
+            text: 'Tutar',
+        },
+        { // Durum
+            text: 'Durum',
+        }
+    ]
 
-        </View>
+    const boxStyles = [
+        { // Tarih
+            flex: 1.1
+        },
+        { // Talimat No
+            ellipsizeMode: 'head',
+            textAlign: 'right',
+            flex: .7
+        },
+        { // Açıklama
+            textAlign: 'left',
+            numberOfLines: 4,
+            flex: 1.3,
+        },
+        { // Tutar
+            numberOfLines: 2,
+            textAlign: 'right',
+        },
+        { // Durum
+
+        },
+
+    ]
+
+    const bottomList = [
+        {
+            text: 'Onay Bekleyen',
+            amount: '0'
+        },
+        {
+            text: 'Onaylanan',
+            amount: '0'
+        },
+        {
+            text: 'Ödenen',
+            amount: '0'
+        },
+    ]
+
+
+    return (
+        <>
+            {
+                items.length > 0 ? (
+                    <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                        <HeaderLine titles={titles} col={ThemeColors.directives.SubHeaderBar} />
+                        <View style={{ flex: 1 }}>
+                            <MiddleLine items={items} boxStyles={boxStyles} onEnd={() => GetData()} />
+                        </View>
+                        <BottomLine items={bottomList} col={ThemeColors.directives.SubHeaderBar} />
+                    </View>
+                ) : (
+                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
+                    </View>
+                )
+            }
+        </>
     )
 }
 
-const HeaderLine = () => {
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderLeftWidth: 0 }]}>
-                    <Text style={styles.textStyle}>Tarih</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Talimat No</Text>
-                </View>
-                <View style={[styles.box, { flex: 1.5 }]}>
-                    <Text style={styles.textStyle}>Açıklama</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Tutar</Text>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.textStyle}>Durum</Text>
-                </View>
-            </View>
-        </View>
-    )
-}
-
-const BottomLine = ({ totals }) => {
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Onay Bekleyen</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Onaylanan</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5 }]}>
-                    <Text style={[styles.textStyle, {fontWeight: 'bold'}]}>Ödenen</Text>
-                </View>
-            </View>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: ThemeColors.SubHeaderBar }}>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totals?.Packing)}</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5, borderRightWidth: 0 }]}>
-                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totals?.Weight)}</Text>
-                </View>
-                <View style={[styles.box, { borderWidth: .5 }]}>
-                    <Text style={[styles.textStyle, { color: 'white' }]}>{toAmount(totals?.Weight)}</Text>
-                </View>
-            </View>
-        </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    box: {
-        height: 30,
-        flex: 1,
-        justifyContent: 'center',
-        borderLeftWidth: .5
-    },
-    textStyle: {
-        textAlign: 'center',
-        fontSize: 12,
-        color: 'white',
-        fontWeight: '600'
+function EditDatas(datas) {
+    if (typeof (datas) !== "object") {
+        console.log("HATA: Girilen veri bir obje değil. Mevcut Tipi: ", typeof (datas))
+        return null;
     }
-})
+    var newData = [];
+    let l = Object.keys(datas).length
+    for (let i = 0; i < l; i++) {
+        const temp = datas[i];
+        newData.push(
+            [
+                [
+                    { // Tarih
+                        title: temp.Date.slice(0, 10),
+                    },
+                    { // Talimat No
+                        title: parseInt(temp.Code),
+                    },
+                    { // Açıklama
+                        title: temp.Desc,
+                    },
+                    { // Tutar
+                        title: toAmount(Math.abs(temp.Amount).toFixed(2)) + '\n ' + temp.CurrencyType.Name,
+                    },
+                    { // Durum
+                        title: temp.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'
+                    },
+                ]
+            ]
+        )
+    }
+    return newData;
+}
 
 export default Directives;

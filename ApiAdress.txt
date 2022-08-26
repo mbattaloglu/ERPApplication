@@ -21,7 +21,7 @@ Toplam Hacim    :
 Kabul Tarihi    : DocumentDate
 Sevk Tarihi     : ShipmentDate
 Gönderen Şube   : SenderBranch > BranchName
-Alıcı Şube      : ReceieverBranch > BranchName
+Alıcı Şube      : ReceiverBranch > BranchName
 Araç No         : TransportWaybill > declarationNumber
 Firma Bilgisi   : SenderName
 

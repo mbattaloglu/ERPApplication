@@ -5,6 +5,7 @@ import UserIcon from "../images/icons/user.png"
 import LogoImage from "../images/logo.png"
 import CalendarIcon from "../images/icons/calendar.png"
 import SearchIcon from "../images/icons/search.png"
+import NextIcon from "../images/icons/next.png"
 
 //#region TabBar
 import HomeIcon from "../images/icons/Tab/home.png"
@@ -16,8 +17,23 @@ import SettingsIcon from "../images/icons/Tab/settings.png"
 
 
 const ThemeColors = {
-    HeaderBar: '#3B57C4',
-    SubHeaderBar: '#6497FC'
+    transportList: {
+        HeaderBar: '#8c2f39',
+        SubHeaderBar: '#b23a48'
+    },
+    directives: {
+        HeaderBar: '#2d6a4f',
+        SubHeaderBar: '#40916c'
+    },
+    customerSuppliers: {
+        HeaderBar: '#023e8a',
+        SubHeaderBar: '#0077b6'
+    },
+    Home: {
+        HeaderBar: '#33415c',
+        SubHeaderBar: '#5c677d'
+    }
+    
 }
 
 const Images = {
@@ -33,7 +49,8 @@ const Icons = {
     suppliers: SuppliersIcon,
     settings: SettingsIcon,
     calendar: CalendarIcon,
-    search: SearchIcon
+    search: SearchIcon,
+    next: NextIcon
 }
 
 const Api = {

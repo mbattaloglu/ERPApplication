@@ -9,5 +9,4 @@ Müşteri Sevk Listesi
 Talimatlarım;
 - Toplama çalışmıyor (API) // Groupby kullanmamı istiyor.
 
-
 Filtre ile birlikte toplama işlemi yapmıyor. Groupby isteniyor.

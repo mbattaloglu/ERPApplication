@@ -15,12 +15,12 @@ function toAmount(amount) {
 
     for (let i = 0; i < l; i++) {
         if (i%3 == 0 && i != 0) {
-            newInt = ',' + newInt;
+            newInt = '.' + newInt;
         }
         newInt = int[l - i - 1] + newInt;
     }
 
-    return newInt + (rat ? '.' + rat : '');
+    return newInt + (rat ? ',' + rat : '');
 
 }
 

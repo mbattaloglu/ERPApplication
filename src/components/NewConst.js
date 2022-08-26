@@ -1,131 +1,60 @@
 import React from "react";
-import { View, StyleSheet, Text, FlatList, Dimensions } from "react-native";
+import { View, StyleSheet, Text, FlatList, Dimensions, TouchableOpacity } from "react-native";
 
 const WIDTH = Dimensions.get('window').width;
+const BORDER_COLOR = 'darkgray';
 
-const NewConst = () => {
-
-    const titles = [
-        {
-            text: 'Tarih',
-        },
-        {
-            text: 'Talimat No',
-        },
-        {
-            text: 'Açıklama',
-        },
-        {
-            text: 'Tipi',
-        },
-        {
-            text: 'Tutar',
-        },
-        {
-            text: 'B/A',
-            flex: .4
-        }
-    ]
-
-    const bottomList = [
-        {
-            text: 'Borcu',
-            amount: '123'
-        },
-        {
-            text: 'Alacağı',
-            amount: '456'
-        },
-        {
-            text: 'Bakiye',
-            amount: '789'
-        },
-    ]
-
-    const products = [
-        [
-            {
-                title: '2022-05-12',
-            },
-            {
-                title: '134468'
-            },
-            {
-                title: 'VRMNFŞ--008'
-            },
-            {
-                title: 'Virement'
-            },
-            {
-                title: '2,180.00'
-            },
-            {
-                title: 'b',
-                flex: .4
-            }
-        ],
-        [
-            {
-                title: '2022-05-12',
-            },
-            {
-                title: '134468'
-            },
-            {
-                title: 'VRMNFŞ--008'
-            },
-            {
-                title: 'Virement'
-            },
-            {
-                title: '2,180.00'
-            },
-            {
-                title: 'b',
-                flex: .4
-            }
-        ],
-    ]
-
+const HeaderLine = ({ titles, col }) => {
     return (
-        <View style={{ justifyContent: 'space-between', flex: 1 }}>
-            <HeaderLine titles={titles} />
-            <View style={{ flex: 1 }}>
-                <MiddleLine items={products} />
-            </View>
-            <BottomLine items={bottomList} />
-        </View>
-    )
-}
-
-const HeaderLine = ({ titles }) => {
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: '#219ebc', alignItems: 'center', justifyContent: 'center' }}>
-                <FlatList
-                    data={titles}
-                    keyExtractor={(item) => item.text}
-                    numColumns={Object.keys(titles).length}
-                    renderItem={({ item }) => (
-                        <View style={[styles.box, item.flex ? { flex: item.flex } : null]}>
+        <View style={{ alignItems: 'center', borderColor: BORDER_COLOR }}>
+            <View style={{
+                flexDirection: 'row',
+                borderWidth: .5,
+                borderColor: BORDER_COLOR,
+                backgroundColor: col,
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                {
+                    titles.map((item, index) => (
+                        <View
+                            style={
+                                [styles.box,
+                                {
+                                    height: 40,
+                                    flex: item.flex ? item.flex : 1,
+                                    borderLeftWidth: index != 0 ? .5 : 0
+                                }
+                                ]
+                            }
+                            key={index}
+                        >
                             <Text style={styles.textStyle}>{item.text}</Text>
                         </View>
-                    )}
-                />
+                    ))
+                }
             </View>
         </View>
     )
 }
 
-const MiddleLine = ({ items }) => {
+const MiddleLine = ({ items, onEnd, boxStyles, canClick, command }) => {
+    console.log(Object.keys(items).length)
     return (
         <View style={{ alignItems: 'center' }}>
             <FlatList
                 data={items}
-                renderItem={({ item }) => (
-                    <View style={{ alignItems: 'center' }}>
-                        <Box items={item} />
-                    </View>
+                onEndReached={() => onEnd()}
+                onEndReachedThreshold={.5}
+                //keyExtractor={(item, index) => index + Date.now() + Math.random()}
+                renderItem={({ item, index }) => (
+                    <Box
+                        items={item}
+                        boxStyles={boxStyles}
+                        lineColor={index % 2 == 0 ? '#FEFFFF' : '#f8f9fa'}
+                        command={(oid)=> command(oid)}
+                        canClick={canClick}
+                    />
                 )}
             />
 
@@ -134,58 +63,107 @@ const MiddleLine = ({ items }) => {
 }
 
 
-const Box = ({ items }) => {
+const Box = ({ items, lineColor, boxStyles, canClick, command }) => {
+    var l = Object.keys(boxStyles).length;
+
     return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', borderBottomWidth: 1, backgroundColor: 'darkgray', alignItems: 'center', justifyContent: 'center' }}>
-                <FlatList
-                    data={items}
-                    keyExtractor={({ index }) => index}
-                    numColumns={items.length}
-                    style={{width: WIDTH}}
-                    renderItem={({ item }) => (
-                        <View style={[styles.box, item.flex ? { flex: item.flex } : null]}>
-                            <Text style={[styles.textStyle, { fontSize: 9 }]}>{item.title}</Text>
+        <TouchableOpacity
+            style={{
+                flexDirection: 'row',
+                backgroundColor: lineColor,
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: WIDTH
+            }}
+            disabled={!canClick}
+            onPress={() => command(items[0][2].title)}
+        >
+            {
+                items[0].map((item, index) => {
+                    var i = index % l;
+                    return (
+                        <View style={[styles.box, { flex: boxStyles[i].flex ? boxStyles[i].flex : 1, borderLeftWidth: index != 0 ? .5 : 0, borderBottomWidth: .5, borderColor: BORDER_COLOR }]} key={index}>
+                            <Text style={{
+                                fontSize: 13,
+                                color: items[1]?.color ? items[1]?.color : 'black',
+                                textAlign: boxStyles[i].textAlign ? boxStyles[i].textAlign : 'center',
+                                paddingHorizontal: 5,
+                                textAlignVertical: 'center',
+                            }}
+                                numberOfLines={boxStyles[i].numberOfLines ? boxStyles[i].numberOfLines : 1}
+                                ellipsizeMode={boxStyles[i].ellipsizeMode ? boxStyles[i].ellipsizeMode : 'tail'}
+                            >{item.title}</Text>
                         </View>
-                    )}
-                />
-            </View>
-        </View>
+                    )
+                })
+            }
+        </TouchableOpacity>
     )
 }
 
-const BottomLine = ({ items }) => {
+const BottomLine = ({ items, col }) => {
     return (
 
-        <View style={{ flexDirection: 'row', backgroundColor: '#219ebc' }}>
-            <FlatList
-                data={items}
-                keyExtractor={(item) => item.text}
-                numColumns={3}
-                renderItem={({ item }) => (
-                    <View style={{ flex: 1 }}>
-                        <View style={{ height: 30, borderWidth: .5, justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', backgroundColor: col, borderWidth: .5, borderColor: BORDER_COLOR }}>
+            {
+                items.map((item, index) => (
+                    <View style={{ flex: 1, borderLeftWidth: index != 0 ? .5 : 0, borderColor: BORDER_COLOR }} key={index}>
+
+                        <View style={{ height: 30, justifyContent: 'center', borderBottomWidth: .5, borderColor: BORDER_COLOR }}>
                             <Text style={styles.textStyle}>{item.text}</Text>
                         </View>
 
-                        <View style={{ height: 30, borderWidth: .5, justifyContent: 'center' }}>
+                        <View style={{ height: 30, justifyContent: 'center' }}>
                             <Text style={styles.textStyle}>{item.amount}</Text>
                         </View>
+
                     </View>
-                )}
-            />
+                ))
+            }
         </View>
     )
+}
+
+const EditDatas = ({ datas }) => {
+    if (typeof (datas) != Object) {
+        console.log("HATA: Girilen veri bir obje değil.")
+        return null;
+    }
+    var newData = [];
+    let l = Object.keys(datas)
+    for (let i = 0; i < l; i++) {
+        const temp = datas[i];
+        newData.push(
+            [
+                {
+                    title: cc.DocumentDate,
+                },
+                {
+                    title: cc.SenderName,
+                },
+                {
+                    title: cc.Oid,
+                },
+                {
+                    title: cc.TransportWaybill.declarationNumber,
+                },
+                {
+                    title: cc.TotalPackingQuantity,
+                },
+
+            ]
+        )
+    }
+    return newData;
 }
 
 
 const styles = StyleSheet.create({
     box: {
-        height: 30,
+        height: 70,
         flex: 1,
         justifyContent: 'center',
-        borderLeftWidth: .5,
-        borderColor: 'gray' // Renk değiştir
+        borderColor: BORDER_COLOR
     },
     textStyle: {
         textAlign: 'center',
@@ -193,7 +171,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '600'
     },
-
 })
 
-export default NewConst;
+export { HeaderLine, MiddleLine, BottomLine, EditDatas };
