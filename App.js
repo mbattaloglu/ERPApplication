@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Image } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,37 +15,69 @@ import TransportList from "./src/pages/TransportList";
 import TransportDetails from "./src/pages/TransportDetails";
 import Settings from "./src/pages/Settings";
 import Filter from "./src/pages/Filter";
+import TransportFilter from "./src/pages/Filters/TransportFilter";
+import FilterDatas from "./src/pages/Filters/FilterDatas";
 //#endregion
+
 
 const TransportStack = createNativeStackNavigator();
 
-const TransportScreen = () => {
+const TransportScreen = ({navigation}) => {
   return (
     <TransportStack.Navigator screenOptions={{
       headerShown: true
     }}>
-      <TransportStack.Screen 
+      <TransportStack.Screen
         name="TransportList"
         component={TransportList}
         options={{
           title: 'Müşteri Sevk Listesi',
-                headerStyle: {
-                  backgroundColor: ThemeColors.transportList.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: ThemeColors.transportList.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("TransportFilter")}>
+              <Image source={Icons.filter} style={{ height: 20, width: 20, tintColor: 'white' }} />
+            </TouchableOpacity>
+          )
         }}
       />
-      <TransportStack.Screen 
+      <TransportStack.Screen
         name="TransportDetails"
         component={TransportDetails}
         options={{
           title: 'Sevk Detayları',
-                headerStyle: {
-                  backgroundColor: ThemeColors.transportList.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: ThemeColors.transportList.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
+      <TransportStack.Screen
+        name="TransportFilter"
+        component={TransportFilter}
+        options={{
+          title: 'Müşteri Sevk Listesi',
+          headerStyle: {
+            backgroundColor: ThemeColors.transportList.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
+      <TransportStack.Screen
+        name="FilterDatas"
+        component={FilterDatas}
+        options={{
+          title: 'Müşteri Sevk Listesi',
+          headerStyle: {
+            backgroundColor: ThemeColors.transportList.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
         }}
       />
     </TransportStack.Navigator>

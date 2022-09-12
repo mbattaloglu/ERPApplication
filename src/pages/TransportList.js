@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { View, Text } from "react-native";
-import { User, Api, ThemeColors } from "../components/Constants";
+import { User, Api, ThemeColors, Icons } from "../components/Constants";
 
 import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
 
-
-var i = 0;
-
-// Çift Sevk Kalemi 33714
+var MaxTop = 100;
 
 const filtersTitle = [
     startDate = 'DocumentDate ge ',
@@ -39,13 +36,10 @@ const TransportList = ({ navigation }) => {
             .then(res => setTotals(...res.value))
     }
 
-    const [edit, setEdit] = useState(false);
+    //const [edit, setEdit] = useState(false);
     const [items, setItems] = useState([]);
-    const [totals, setTotals] = useState("");
-
-    const fff = false;
-
-    const [expand, setExpand] = useState('');
+    const [top, setTop] = useState(20);
+    //const [expand, setExpand] = useState();
 
     function Filters(list) {
         console.log(list)
@@ -66,21 +60,15 @@ const TransportList = ({ navigation }) => {
         return all;
     }
 
-    useEffect(() => {
-        console.log("DEĞİŞTİ: ", expand)
-    }, [expand])
+    const GetAllDatas = useMemo(async () => { //Tarih listelimi kontrol et
 
-    const GetData = () => { //Tarih listelimi kontrol et
-        console.log(expand);
-        fetch(
+        console.log("Sevk Listesi verileri çekildi.");
+        var datas = await fetch(
             (
                 Api.link +
                 '/odata/TransportCards' +
                 '?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity' +
-                '&$expand=TransportWaybill($select=declarationNumber)' +
-                '&$top=20' +
-                '&$skip=' + i +
-                (expand)
+                '&$expand=TransportWaybill($select=declarationNumber)'
             ),
             {
                 method: 'GET',
@@ -91,16 +79,11 @@ const TransportList = ({ navigation }) => {
             })
             .then(res => res.json())
             .then(res => res.value)
-            .then(res => setItems([...items, ...EditDatas(res)]))
-            .then(i = i + 20)
             .catch((e) => console.log(e));
 
-    }
 
+        setItems(EditDatas(datas));
 
-    useEffect(() => {
-        GetTotal();
-        GetData();
     }, [])
 
     const titles = [
@@ -108,13 +91,13 @@ const TransportList = ({ navigation }) => {
             text: 'Tarih',
             flex: 1.2
         },
-        { // Firma
-            text: 'Firma',
-            flex: 1.8
-        },
         { // Fiş No
             text: 'Fiş No',
             flex: .7
+        },
+        { // Firma
+            text: 'Firma',
+            flex: 1.8
         },
         { // Araç No
             text: 'Araç No',
@@ -124,19 +107,15 @@ const TransportList = ({ navigation }) => {
         }
     ]
 
-    const boxStyles = [
+    const itemStyles = [
         { // Tarih
-            flex: 1.2
+
         },
         { // Firma
-            textAlign: 'left',
-            numberOfLines: 2,
-            flex: 1.8,
+
         },
         { // Fiş No
-            ellipsizeMode: 'head',
-            textAlign: 'right',
-            flex: .7
+
         },
         { // Araç No
 
@@ -146,6 +125,11 @@ const TransportList = ({ navigation }) => {
         },
 
     ]
+
+    const boxStyles = {
+        icon: Icons.details,
+        height: 110
+    }
 
     const bottomList = [
         {
@@ -163,14 +147,15 @@ const TransportList = ({ navigation }) => {
             {
                 items.length > 0 ? (
                     <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <HeaderLine titles={titles} col={ThemeColors.transportList.SubHeaderBar} />
                         <View style={{ flex: 1 }}>
                             <MiddleLine
-                                items={items}
+                                items={items.slice(0, top)}
+                                itemStyles={itemStyles}
                                 boxStyles={boxStyles}
-                                onEnd={() => GetData()}
-                                canClick
-                                command={(oid) => navigation.navigate('TransportDetails', {oid})}
+                                onEnd={() => top < MaxTop ? setTop(top + 20) : null}
+                                canClick //TODO: Destroy this
+                                command={(oid) => navigation.navigate('TransportDetails', { oid })}
+                                titles={titles}
                             />
                         </View>
                         <BottomLine items={bottomList} col={ThemeColors.transportList.SubHeaderBar} />
@@ -200,11 +185,11 @@ function EditDatas(datas) {
                     { // Tarih
                         title: temp.DocumentDate.slice(0, 10),
                     },
-                    { // Firma
-                        title: temp.SenderName,
-                    },
                     { // Fiş No
                         title: temp.Oid,
+                    },
+                    { // Firma
+                        title: temp.SenderName,
                     },
                     { // Araç No
                         title: temp.TransportWaybill.declarationNumber,

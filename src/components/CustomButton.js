@@ -14,7 +14,7 @@ const CustomButton = ({boxStyle, titleStyle, title, onClickHandler}) => {
 
 const styles = StyleSheet.create({
   boxStyle: {
-    backgroundColor: ThemeColors.HeaderBar,
+    backgroundColor: ThemeColors.Home.SubHeaderBar,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

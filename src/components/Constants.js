@@ -6,6 +6,11 @@ import LogoImage from "../images/logo.png"
 import CalendarIcon from "../images/icons/calendar.png"
 import SearchIcon from "../images/icons/search.png"
 import NextIcon from "../images/icons/next.png"
+import DetailsIcon from "../images/icons/details.png"
+import ImageIcon from "../images/icons/image.png"
+import FilterIcon from "../images/icons/filter.png"
+import CancelIcon from "../images/icons/cancel.png"
+import PhoneIcon from "../images/icons/phone.png"
 
 //#region TabBar
 import HomeIcon from "../images/icons/Tab/home.png"
@@ -33,7 +38,7 @@ const ThemeColors = {
         HeaderBar: '#33415c',
         SubHeaderBar: '#5c677d'
     }
-    
+
 }
 
 const Images = {
@@ -50,7 +55,12 @@ const Icons = {
     settings: SettingsIcon,
     calendar: CalendarIcon,
     search: SearchIcon,
-    next: NextIcon
+    next: NextIcon,
+    details: DetailsIcon,
+    image: ImageIcon,
+    filter: FilterIcon,
+    cancel: CancelIcon,
+    phone: PhoneIcon
 }
 
 const Api = {
@@ -73,4 +83,4 @@ const StylesAll = StyleSheet.create({
     }
 })
 
-export {ThemeColors, Icons, Images, User, Api, StylesAll};
+export { ThemeColors, Icons, Images, User, Api, StylesAll };

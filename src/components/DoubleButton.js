@@ -1,9 +1,10 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { ThemeColors } from "./Constants";
 
-const DoubleButton = ({leftCommand, rightCommand}) => {
+const DoubleButton = ({ leftCommand, rightCommand }) => {
     return (
-        <View style={{ flexDirection: 'row', flex: 1, justifyContent:'center' }}>
+        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', marginTop: 50 }}>
             <TouchableOpacity style={styles.boxLeft} onPress={leftCommand}>
                 <Text style={styles.txt}>İPTAL</Text>
             </TouchableOpacity>
@@ -16,31 +17,31 @@ const DoubleButton = ({leftCommand, rightCommand}) => {
 
 const styles = StyleSheet.create({
     boxLeft: {
-        marginRight: 10,
-        height: 48,
-        width: 170,
-        backgroundColor: '#878787',
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderWidth: 2,
+        marginRight: 1,
+        height: 44,
+        width: 163,
+        backgroundColor: '#D08D94',
+        borderRadius: 10,
+        borderWidth: .5,
+        borderColor: 'darkgray',
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     boxRight: {
-        height: 48,
-        width: 170,
-        backgroundColor: '#E93535',
-        borderTopRightRadius: 10,
-        borderBottomRightRadius: 10,
-        borderWidth: 2,
+        height: 44,
+        width: 163,
+        backgroundColor: ThemeColors.transportList.SubHeaderBar,
+        borderRadius: 10,
+        borderWidth: .5,
+        borderColor: 'darkgray',
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     txt: {
         color: 'white',
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: '700'
     }
 })

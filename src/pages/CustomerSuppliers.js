@@ -71,11 +71,9 @@ const CustomerSuppliers = ({ navigation }) => {
     const titles = [
         { // Tarih
             text: 'Tarih',
-            flex: 1.1
         },
         { // Talimat No
             text: 'Talimat No',
-            flex: .8
         },
         { // Açıklama
             text: 'Açıklama',
@@ -83,40 +81,39 @@ const CustomerSuppliers = ({ navigation }) => {
         { // Tipi
             text: 'Tipi',
         },
-        { // Tutar
-            text: 'Tutar',
+        { // Para Birimi
+            text: 'Para Birimi',
         },
-        { // B/A
-            text: 'B/A',
-            flex: .4
-        }
+        { // Tutar
+            
+        },
     ]
 
-    const boxStyles = [
+    const itemStyles = [
         { // Tarih
-            flex: 1.1
+
         },
         { // Talimat No
-            ellipsizeMode: 'head',
-            textAlign: 'right',
-            flex: .8
+
         },
         { // Açıklama
-            textAlign: 'left',
-            numberOfLines: 4,
+            flex: 1.5,
+            numberOfLines: 2
         },
         { // Tipi
 
         },
-        { // Tutar
-            numberOfLines: 2,
-            textAlign: 'right',
+        { // Para Birimi
+            
         },
-        { // B/A
-            flex: .4
-        }
+        { // Tutar
 
+        }
     ]
+
+    const boxStyles = {
+        height: 153
+    }
 
     const bottomList = [
         {
@@ -139,9 +136,8 @@ const CustomerSuppliers = ({ navigation }) => {
             {
                 items.length > 0 ? (
                     <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <HeaderLine titles={titles} col={ThemeColors.customerSuppliers.SubHeaderBar} />
                         <View style={{ flex: 1 }}>
-                            <MiddleLine items={items} boxStyles={boxStyles} onEnd={() => GetData()} />
+                            <MiddleLine items={items} boxStyles={boxStyles} titles={titles} itemStyles={itemStyles} onEnd={() => GetData()} />
                         </View>
                         <BottomLine items={bottomList} col={ThemeColors.customerSuppliers.SubHeaderBar} />
                     </View>
@@ -179,15 +175,18 @@ function EditDatas(datas) {
                     { // Tipi
                         title: temp.SubType,
                     },
-                    { // Tutar
-                        title: toAmount(Math.abs(temp.Amount).toFixed(2)) + '\n ' + 'USD',
+                    { // Para Birimi
+                        title: "USD", // HATIRLA: Manüel
                     },
-                    { // B/A
-                        title: temp.Amount > 0 ? 'B' : 'A',
+                    { // Tutar
+                        title: toAmount(Math.abs(temp.Amount).toFixed(2)),
+                        color: temp.Amount > 0 ? 'red' : 'green',
+                        mainTitle: temp.Amount > 0 ? 'Borç' : 'Alacak'
                     },
                 ],
                 {
-                    color: temp.Amount > 0 ? 'red' : 'green'
+                    color: temp.Amount > 0 ? 'red' : 'green',
+                    b_a: temp.Amount > 0 ? 'Borç' : 'Alacak'
                 }
             ]
         )

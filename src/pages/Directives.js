@@ -1,19 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { User, Api, ThemeColors } from "../components/Constants";
+import { loadOptions } from "@babel/core";
+import { useTheme } from "@react-navigation/native";
+import React, { useEffect, useMemo, useState } from "react";
+import { View, Text, ToastAndroid } from "react-native";
+import { User, Api, ThemeColors, Icons } from "../components/Constants";
 import { toAmount } from "../components/ConstFunctions";
 
 import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
 
+var MaxTop = 0;
 
-var i = 0;
+const bottomList = [
+    {
+        text: 'Onay Bekleyen',
+        amount: '0'
+    },
+    {
+        text: 'Onaylanan',
+        amount: '0'
+    },
+    {
+        text: 'Ödenen',
+        amount: '0'
+    },
+]
+
 // http://193.53.103.178:5312/api/odata/TransportPaymentDirectives/97209/GetCustomerTransportPaymentDirective(Date>'2022-01-01 00:00:00' & Date<'2022-01-31 23:59:59')
 const Directives = () => {
 
     const [items, setItems] = useState([]);
+    const [top, setTop] = useState(20);
 
-    const GetData = () => {
-        fetch(Api.link + '/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 &$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus&$expand=CurrencyType($select=Name)&$top=10&$skip=' + i,
+    const GetAllDatas = useMemo(async () => {
+        console.log("Talimatlarım verileri çekildi!");
+        var datas = await fetch(Api.link + '/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 &$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus&$expand=CurrencyType($select=Name)',
             {
                 method: 'GET',
                 headers: {
@@ -22,14 +41,30 @@ const Directives = () => {
                 },
             })
             .then(res => res.json())
-            .then(res => res.value)
-            .then(res => setItems([...items, ...EditDatas(res)]))
-            .then(i = i + 10)
             .catch((err) => console.log(err))
-    }
 
-    useEffect(() => {
-        GetData();
+        MaxTop = datas.value.length;
+
+        let tpPaid = 0;
+        let tpPartiallyPaid = 0;
+        let tpNotPaid = 0;
+        for (let i = 0; i < MaxTop; i++) {
+            if (datas.value[i].TPDPaymentStatus == 'Paid') {
+                tpPaid += datas.value[i].Amount;
+            }
+            else if (datas.value[i].TPDPaymentStatus == 'PartiallyPaid') {
+                tpPartiallyPaid += datas.value[i].Amount;
+            }
+            else if (datas.value[i].TPDPaymentStatus == 'NotPaid') {
+                tpNotPaid += datas.value[i].Amount;
+            }
+        }
+
+        bottomList[0].amount = toAmount(tpNotPaid.toFixed(2));
+        bottomList[1].amount = toAmount(tpPartiallyPaid.toFixed(2));
+        bottomList[2].amount = toAmount(tpPaid.toFixed(2));
+
+        setItems(EditDatas(datas.value));
     }, [])
 
     const titles = [
@@ -45,6 +80,9 @@ const Directives = () => {
             text: 'Açıklama',
             flex: 1.3
         },
+        { // Para Birimi
+            text: 'Para Birimi',
+        },
         { // Tutar
             text: 'Tutar',
         },
@@ -53,23 +91,19 @@ const Directives = () => {
         }
     ]
 
-    const boxStyles = [
+    const itemStyles = [
         { // Tarih
-            flex: 1.1
+            
         },
         { // Talimat No
-            ellipsizeMode: 'head',
-            textAlign: 'right',
-            flex: .7
+            
         },
         { // Açıklama
-            textAlign: 'left',
-            numberOfLines: 4,
-            flex: 1.3,
+            flex: 1.5,
+            numberOfLines: 2
         },
         { // Tutar
-            numberOfLines: 2,
-            textAlign: 'right',
+            
         },
         { // Durum
 
@@ -77,30 +111,28 @@ const Directives = () => {
 
     ]
 
-    const bottomList = [
-        {
-            text: 'Onay Bekleyen',
-            amount: '0'
-        },
-        {
-            text: 'Onaylanan',
-            amount: '0'
-        },
-        {
-            text: 'Ödenen',
-            amount: '0'
-        },
-    ]
+    const boxStyles = {
+        icon: Icons.image,
+        height: 153,
+    }
 
+    if (items.length > 0) {
+        console.log("Max: ", MaxTop)
+    }
 
     return (
         <>
             {
                 items.length > 0 ? (
                     <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <HeaderLine titles={titles} col={ThemeColors.directives.SubHeaderBar} />
                         <View style={{ flex: 1 }}>
-                            <MiddleLine items={items} boxStyles={boxStyles} onEnd={() => GetData()} />
+                            <MiddleLine
+                                items={items.slice(0, top)}
+                                itemStyles={itemStyles}
+                                onEnd={() => top < MaxTop ? setTop(top + 20) : null}
+                                titles={titles}
+                                boxStyles={boxStyles}
+                            />
                         </View>
                         <BottomLine items={bottomList} col={ThemeColors.directives.SubHeaderBar} />
                     </View>
@@ -135,8 +167,11 @@ function EditDatas(datas) {
                     { // Açıklama
                         title: temp.Desc,
                     },
+                    { // Para Birimi
+                        title: temp.CurrencyType.Name,
+                    },
                     { // Tutar
-                        title: toAmount(Math.abs(temp.Amount).toFixed(2)) + '\n ' + temp.CurrencyType.Name,
+                        title: toAmount(Math.abs(temp.Amount).toFixed(2)),
                     },
                     { // Durum
                         title: temp.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'

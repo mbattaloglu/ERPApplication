@@ -1,0 +1,8 @@
+Müşteri Sevk Listesi:
+    - Toplama işlemi yaptırt.
+
+Talimatlarım:
+    - Durum bilgisine göre Toplama işlemi yaptırt.
+
+Hesap Ekstresi:
+    - Toplama işlemi yaptırt.
