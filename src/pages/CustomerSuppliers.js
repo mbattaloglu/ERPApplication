@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View, Text } from "react-native";
 import { User, ThemeColors } from "../components/Constants";
 import { toAmount } from "../components/ConstFunctions";
 
 import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
 
-var i = 0;
+import { EditDate } from "../components/MyFunctions";
+import { GetCustomerSuppliers } from "../components/ApiAdresses";
+
+var MaxTop = 100;
+var skip = 0;
+var top = 15;
 
 
 const CustomerSuppliers = ({ navigation }) => {
 
     console.log("Yenilendi.")
-
-    const [totalDebit, setTotalDebit] = useState(0);
-    const [totalCredit, setTotalCredit] = useState(0);
-    const [totalBakiye, setTotalBakiye] = useState(0);
 
     const GetTotal = async () => {
         try {
@@ -47,25 +48,15 @@ const CustomerSuppliers = ({ navigation }) => {
 
     const [items, setItems] = useState([]);
 
-    const GetData = () => {
-        console.log("Veri çekti.")
-        fetch('http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name),FinancialTrxs($orderby=TrxDate;$select=TrxDate,LineDescription,SubType,Oid,Amount;$top=20;$skip=' + i + ')&$select=FinancialTrxs', {
-            method: 'GET', /* or POST/PUT/PATCH/DELETE */
-            headers: {
-                'Authorization': 'Bearer ' + User.token,
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then(res => res.value[0].FinancialTrxs)
-            .then(res => setItems([...items, ...EditDatas(res)])) // 1
-            .then(i = i + 20)
-            .catch((err) => console.log(err))
+    const GetData = async () => {
+        setItems([...items, ...EditDatas(await GetCustomerSuppliers(skip, top))])
+        skip += top;
+        console.log("Veriler geldi!")
     }
 
-    useEffect(() => {
+    useMemo(() => {
         GetData();
-        GetTotal();
+        //GetTotal();
     }, [])
 
     const titles = [
@@ -85,7 +76,7 @@ const CustomerSuppliers = ({ navigation }) => {
             text: 'Para Birimi',
         },
         { // Tutar
-            
+
         },
     ]
 
@@ -104,7 +95,7 @@ const CustomerSuppliers = ({ navigation }) => {
 
         },
         { // Para Birimi
-            
+
         },
         { // Tutar
 
@@ -137,7 +128,13 @@ const CustomerSuppliers = ({ navigation }) => {
                 items.length > 0 ? (
                     <View style={{ justifyContent: 'space-between', flex: 1 }}>
                         <View style={{ flex: 1 }}>
-                            <MiddleLine items={items} boxStyles={boxStyles} titles={titles} itemStyles={itemStyles} onEnd={() => GetData()} />
+                            <MiddleLine
+                                items={items}
+                                itemStyles={itemStyles}
+                                boxStyles={boxStyles}
+                                onEnd={() => skip < MaxTop && GetData()}
+                                titles={titles}
+                            />
                         </View>
                         <BottomLine items={bottomList} col={ThemeColors.customerSuppliers.SubHeaderBar} />
                     </View>
@@ -164,7 +161,7 @@ function EditDatas(datas) {
             [
                 [
                     { // Tarih
-                        title: temp.TrxDate.slice(0, 10),
+                        title: EditDate(temp.TrxDate.slice(0, 10)),
                     },
                     { // Talimat No
                         title: temp.Oid,
@@ -183,11 +180,7 @@ function EditDatas(datas) {
                         color: temp.Amount > 0 ? 'red' : 'green',
                         mainTitle: temp.Amount > 0 ? 'Borç' : 'Alacak'
                     },
-                ],
-                {
-                    color: temp.Amount > 0 ? 'red' : 'green',
-                    b_a: temp.Amount > 0 ? 'Borç' : 'Alacak'
-                }
+                ]
             ]
         )
     }

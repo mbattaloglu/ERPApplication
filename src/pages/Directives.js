@@ -1,11 +1,13 @@
 import { loadOptions } from "@babel/core";
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, ToastAndroid } from "react-native";
+import { View, Text } from "react-native";
 import { User, Api, ThemeColors, Icons } from "../components/Constants";
 import { toAmount } from "../components/ConstFunctions";
 
-import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
+import { MiddleLine, BottomLine } from "../components/NewConst";
+
+import { EditDate } from "../components/MyFunctions";
 
 var MaxTop = 0;
 
@@ -32,7 +34,7 @@ const Directives = () => {
 
     const GetAllDatas = useMemo(async () => {
         console.log("Talimatlarım verileri çekildi!");
-        var datas = await fetch(Api.link + '/odata/TransportPaymentDirectives?$filter=CustomerSupplier/Oid eq 97209 &$orderby=Date&$select=Date,Desc,Code,Amount,TPDPaymentStatus&$expand=CurrencyType($select=Name)',
+        var datas = await fetch(Api.link + '/odata/TransportPaymentDirectives?$orderby=Date&$expand=CurrencyType($select=Name)',
             {
                 method: 'GET',
                 headers: {
@@ -159,7 +161,7 @@ function EditDatas(datas) {
             [
                 [
                     { // Tarih
-                        title: temp.Date.slice(0, 10),
+                        title: EditDate(temp.Date.slice(0, 10)),
                     },
                     { // Talimat No
                         title: parseInt(temp.Code),

@@ -37,25 +37,16 @@ const TransportDetails = ({ route }) => {
         },
         {
             text: 'Toplam Hacim',
-            amount: sumVolume(items?.TransportCardDetails)
+            amount: items?.CalculatedTotalVolume
         },
     ]
-
-    function sumVolume(items) {
-        let l = items?.length;
-        let tp = 0;
-        for (let i = 0; i < l; i++) {
-            tp += items[i].Volume
-        }
-        return tp;
-    }
 
     const getDetails = () => {
         fetch
             (
                 (
                     Api.link +
-                    '/odata/TransportCards/' + route.params.oid + '?$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight,TotalVolume' +
+                    '/odata/TransportCards/' + route.params.oid + '?$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight,CalculatedTotalVolume' +
                     '&$expand=SenderBranch($select=BranchName),' +
                     'ReceiverBranch($select=BranchName),' +
                     'TransportWaybill($select=declarationNumber),' +

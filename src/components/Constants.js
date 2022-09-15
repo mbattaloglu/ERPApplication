@@ -12,12 +12,20 @@ import FilterIcon from "../images/icons/filter.png"
 import CancelIcon from "../images/icons/cancel.png"
 import PhoneIcon from "../images/icons/phone.png"
 
-//#region TabBar
-import HomeIcon from "../images/icons/Tab/home.png"
-import TransportIcon from "../images/icons/Tab/delivery.png"
-import DirectiveIcon from "../images/icons/Tab/checked.png"
-import SuppliersIcon from "../images/icons/Tab/budget.png"
-import SettingsIcon from "../images/icons/Tab/settings.png"
+//#region OutLine
+import HomeIcon_OutLine from "../images/icons/OutLine/home.png"
+import TransportsIcon_OutLine from "../images/icons/OutLine/transports.png"
+import DirectivesIcon_OutLine from "../images/icons/OutLine/directives.png"
+import SuppliersIcon_OutLine from "../images/icons/OutLine/suppliers.png"
+import SettingsIcon_OutLine from "../images/icons/OutLine/settings.png"
+//#endregion
+
+//#region Fill
+import HomeIcon_Fill from "../images/icons/Fill/home.png"
+import TransportsIcon_Fill from "../images/icons/Fill/transports.png"
+import DirectivesIcon_Fill from "../images/icons/Fill/directives.png"
+import SuppliersIcon_Fill from "../images/icons/Fill/suppliers.png"
+import SettingsIcon_Fill from "../images/icons/Fill/settings.png"
 //#endregion
 
 
@@ -48,11 +56,6 @@ const Images = {
 const Icons = {
     click: ClickIcon,
     user: UserIcon,
-    home: HomeIcon,
-    transport: TransportIcon,
-    directive: DirectiveIcon,
-    suppliers: SuppliersIcon,
-    settings: SettingsIcon,
     calendar: CalendarIcon,
     search: SearchIcon,
     next: NextIcon,
@@ -60,7 +63,21 @@ const Icons = {
     image: ImageIcon,
     filter: FilterIcon,
     cancel: CancelIcon,
-    phone: PhoneIcon
+    phone: PhoneIcon,
+    outLine: {
+        home: HomeIcon_OutLine,
+        transports: TransportsIcon_OutLine,
+        directives: DirectivesIcon_OutLine,
+        suppliers: SuppliersIcon_OutLine,
+        settings: SettingsIcon_OutLine
+    },
+    fill: {
+        home: HomeIcon_Fill,
+        transports: TransportsIcon_Fill,
+        directives: DirectivesIcon_Fill,
+        suppliers: SuppliersIcon_Fill,
+        settings: SettingsIcon_Fill
+    },
 }
 
 const Api = {

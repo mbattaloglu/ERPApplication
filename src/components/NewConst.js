@@ -4,14 +4,15 @@ import { View, StyleSheet, Text, FlatList, Dimensions, TouchableOpacity, Image }
 const WIDTH = Dimensions.get('window').width;
 const BORDER_COLOR = 'darkgray';
 
-const MiddleLine = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles }) => {
-    console.log(Object.keys(items).length)
+const MiddleLine = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp }) => {
+    //console.log(Object.keys(items).length)
     return (
         <View style={{ alignItems: 'center' }}>
             <FlatList
                 data={items}
                 onEndReached={() => onEnd()}
                 onEndReachedThreshold={.5} // TODO: Calculate this
+                ListFooterComponent={feetComp}
                 //TODO: Add loading text
                 //TODO: Add key, if it necessary
                 renderItem={({ item, index }) => {
@@ -47,7 +48,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
                 flexDirection: 'row',
                 backgroundColor: lineColor,
                 alignItems: 'center',
-                marginTop: 13,
+                marginVertical: 7,
                 paddingHorizontal: 10,
                 justifyContent: 'space-between',
                 width: WIDTH,
@@ -128,6 +129,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
 }
 
 const BottomLine = ({ items, col }) => {
+    //console.log(items)
     return (
         <View style={{ flexDirection: 'row', backgroundColor: col, borderWidth: .5, borderColor: BORDER_COLOR }}>
             {

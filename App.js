@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -14,19 +14,45 @@ import Directives from "./src/pages/Directives";
 import TransportList from "./src/pages/TransportList";
 import TransportDetails from "./src/pages/TransportDetails";
 import Settings from "./src/pages/Settings";
-import Filter from "./src/pages/Filter";
 import TransportFilter from "./src/pages/Filters/TransportFilter";
 import FilterDatas from "./src/pages/Filters/FilterDatas";
 //#endregion
 
 
+const optionsScreen = {
+  headerShown: true,
+  animation: 'none',
+}
+
+
+const DirectivesStack = createNativeStackNavigator();
+
+const DirectivesScreen = ({ navigation }) => {
+  return (
+    <DirectivesStack.Navigator
+      screenOptions={optionsScreen}>
+      <DirectivesStack.Screen
+        name="Directives"
+        component={Directives}
+        options={{
+          title: 'Talimatlarım',
+          headerStyle: {
+            backgroundColor: ThemeColors.directives.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }} />
+
+    </DirectivesStack.Navigator >
+  )
+}
+
 const TransportStack = createNativeStackNavigator();
 
-const TransportScreen = ({navigation}) => {
+const TransportScreen = ({ navigation }) => {
   return (
-    <TransportStack.Navigator screenOptions={{
-      headerShown: true
-    }}>
+    <TransportStack.Navigator
+      screenOptions={optionsScreen}>
       <TransportStack.Screen
         name="TransportList"
         component={TransportList}
@@ -123,7 +149,7 @@ const App = () => {
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
-                    source={Icons.home}
+                    source={focused ? Icons.fill.home : Icons.outLine.home}
                     style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
                   />
                 )
@@ -138,25 +164,21 @@ const App = () => {
                 headerShown: false,
                 tabBarIcon: ({ focused }) => (
                   <Image
-                    source={Icons.transport}
+                    source={focused ? Icons.fill.transports : Icons.outLine.transports}
                     style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.HeaderBar : 'gray' }]}
                   />
                 ),
               }}
             />
             <Tab.Screen
-              name="Directives"
-              component={Directives}
+              name="DirectivesScreen"
+              component={DirectivesScreen}
               options={{
                 title: 'Talimatlarım',
-                headerStyle: {
-                  backgroundColor: ThemeColors.directives.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
+                headerShown: false,
                 tabBarIcon: ({ focused }) => (
                   <Image
-                    source={Icons.directive}
+                    source={focused ? Icons.fill.directives : Icons.outLine.directives}
                     style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.HeaderBar : 'gray' }]}
                   />
                 ),
@@ -174,7 +196,7 @@ const App = () => {
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
-                    source={Icons.suppliers}
+                    source={focused ? Icons.fill.suppliers : Icons.outLine.suppliers}
                     style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.HeaderBar : 'gray' }]}
                   />
                 ),
@@ -192,7 +214,7 @@ const App = () => {
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ focused }) => (
                   <Image
-                    source={Icons.settings}
+                    source={focused ? Icons.fill.settings : Icons.outLine.settings}
                     style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
                   />
                 ),
@@ -208,7 +230,7 @@ const App = () => {
           </AuthStack.Navigator>
         )}
       </NavigationContainer>
-    </AuthContext.Provider>
+    </AuthContext.Provider >
   );
 };
 

@@ -1,103 +1,82 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { View, Text } from "react-native";
-import { User, Api, ThemeColors, Icons } from "../components/Constants";
+import React, { useState, useMemo, useReducer } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import { ThemeColors, Icons } from "../components/Constants";
 
-import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
+import { MiddleLine, BottomLine } from "../components/NewConst";
 
-var MaxTop = 100;
+import { EditDate, Reducer } from "../components/MyFunctions";
+import { GetList, GetTotals, GetTransportCardsTotals } from "../components/ApiFunctions";
 
-const filtersTitle = [
-    startDate = 'DocumentDate ge ',
-    endDate = 'DocumentDate le ',
-    vehicle = "TransportWaybill/declarationNumber eq ",
-    company = "SenderName eq "
-]
+var skip = 0;
+var top = 15;
+
+const datas = {
+    lists: [],
+    totals: [
+        {
+            text: 'Toplam Çuval',
+            amount: 0
+        },
+        {
+            text: 'Toplam KG',
+            amount: 0
+        },
+        {
+            text: 'Toplam Hacim',
+            amount: 0
+        },
+    ],
+    noData: false,
+}
 
 
-const filtersList2 = [
-    startDate = 'DocumentDate ge 2020-01-01',
-    endDate = 'DocumentDate le 2022-12-30',
-    vehicle = "TransportWaybill/declarationNumber eq 'P-02/22'",
-    company = "SenderName eq 'SONER ATAKUL ( USD )'"
-]
+const TransportList = ({ navigation, route }) => {
 
-const TransportList = ({ navigation }) => {
+    //İlk veriler geldi mi?
+    const [loading, setLoading] = useState(false);
 
-    const GetTotal = () => {
-        fetch('http://193.53.103.178:5312/api/odata/TransportCards?$apply=aggregate(TotalPackingQuantity with sum as Packing, TotalWeight with sum as Weight)',
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + User.token,
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(res => setTotals(...res.value))
+    //Tüm verileri tutuyor: 'lists, totals, noData'
+    const [state, dispatch] = useReducer(Reducer, datas);
+
+    useMemo(() => {
+        GetAll(route.params?.filters);
+    }, [route.params])
+
+    /** İlk gelecek verileri çağırıyor
+     * 
+     * @param filters Filtre ekler. (Opsiyonel)
+     */
+    async function GetAll(filters = '') {
+        setLoading(true);
+        const lists = EditDatas(await GetList('TransportCards', 0, top, filters)) // SORUN: Verileri hemen vermiyor!
+        const totals = await GetTotals('TransportCards', filters)
+        dispatch({ type: 'first', lists: lists, totals: [totals.Packing, totals.Weight, totals.Volume] })
+        skip = top;
+        console.log("Tüm veriler sıfırlandı.")
+        setLoading(false);
     }
 
-    //const [edit, setEdit] = useState(false);
-    const [items, setItems] = useState([]);
-    const [top, setTop] = useState(20);
-    //const [expand, setExpand] = useState();
-
-    function Filters(list) {
-        console.log(list)
-        let all = '&$filter=';
-        let l = list.length;
-        var first = true;
-        for (let i = 0; i < l; i++) {
-            if (list[i] != '') {
-                if (first) {
-                    all += filtersTitle[i] + list[i];
-                    first = false;
-                }
-                else {
-                    all += ' and ' + filtersTitle[i] + list[i];
-                }
-            }
-        }
-        return all;
+    /** Yeni gelecek verileri çekiyor.
+     * 
+     * @param filters Filtre ekler. (Opsiyonel)
+     */
+    async function GetNewDatas(filters = '') {
+        const newDatas = EditDatas(await GetList('TransportCards', skip, top, filters))
+        dispatch({ type: 'add', lists: newDatas })
+        skip += top;
+        console.log("Yenileri eklendi!");
     }
 
-    const GetAllDatas = useMemo(async () => { //Tarih listelimi kontrol et
-
-        console.log("Sevk Listesi verileri çekildi.");
-        var datas = await fetch(
-            (
-                Api.link +
-                '/odata/TransportCards' +
-                '?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity' +
-                '&$expand=TransportWaybill($select=declarationNumber)'
-            ),
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + User.token,
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(res => res.value)
-            .catch((e) => console.log(e));
-
-
-        setItems(EditDatas(datas));
-
-    }, [])
 
     const titles = [
         { // Tarih
             text: 'Tarih',
-            flex: 1.2
         },
         { // Fiş No
             text: 'Fiş No',
-            flex: .7
         },
         { // Firma
             text: 'Firma',
-            flex: 1.8
         },
         { // Araç No
             text: 'Araç No',
@@ -106,6 +85,11 @@ const TransportList = ({ navigation }) => {
             text: 'Ambalaj',
         }
     ]
+
+    const boxStyles = {
+        icon: Icons.details,
+        height: 110
+    }
 
     const itemStyles = [
         { // Tarih
@@ -126,82 +110,90 @@ const TransportList = ({ navigation }) => {
 
     ]
 
-    const boxStyles = {
-        icon: Icons.details,
-        height: 110
-    }
-
-    const bottomList = [
-        {
-            text: 'Toplam Çuval',
-            amount: '0'
-        },
-        {
-            text: 'Toplam KG',
-            amount: '0'
-        },
-    ]
-
     return (
-        <>
+        <View style={{ justifyContent: 'space-between', flex: 1 }}>
             {
-                items.length > 0 ? (
-                    <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <View style={{ flex: 1 }}>
-                            <MiddleLine
-                                items={items.slice(0, top)}
-                                itemStyles={itemStyles}
-                                boxStyles={boxStyles}
-                                onEnd={() => top < MaxTop ? setTop(top + 20) : null}
-                                canClick //TODO: Destroy this
-                                command={(oid) => navigation.navigate('TransportDetails', { oid })}
-                                titles={titles}
-                            />
-                        </View>
-                        <BottomLine items={bottomList} col={ThemeColors.transportList.SubHeaderBar} />
+                state.lists?.length > 0 && !loading ? (
+                    <View style={{ flex: 1 }}>
+                        <MiddleLine
+                            items={state.lists}
+                            itemStyles={itemStyles}
+                            boxStyles={boxStyles}
+                            onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
+                            feetComp={!state.noData &&
+                                <ActivityIndicator
+                                    style={{ flex: 1 }}
+                                    color={ThemeColors.transportList.HeaderBar}
+                                    size={'large'}
+                                />}
+                            canClick //TODO: Destroy this
+                            command={(oid) => navigation.navigate('TransportDetails', { oid })}
+                            titles={titles}
+                        />
                     </View>
                 ) : (
-                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
-                    </View>
+                    <>
+                        {
+                            state.noData && !loading ? (
+                                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }} >
+                                    <Text style={{ color: 'black', fontSize: 20 }}>Hiç veri yok</Text>
+                                </View>
+                            ) : (
+                                <ActivityIndicator
+                                    style={{ flex: 1 }}
+                                    color={ThemeColors.transportList.HeaderBar}
+                                    size={'large'}
+                                />
+                            )
+                        }
+                    </>
                 )
             }
-        </>
+            <BottomLine items={state.totals} col={ThemeColors.transportList.SubHeaderBar} />
+        </View>
     )
 }
 
 function EditDatas(datas) {
-    if (typeof (datas) !== "object") {
-        console.log("HATA: Girilen veri bir obje değil. Mevcut Tipi: ", typeof (datas))
+    try {
+        if (typeof (datas) !== "object") {
+            console.log(`HATA: Girilen veri bir obje değil. Mevcut Tipi: ${typeof (datas)}. Konum: EditDatas`)
+            return null;
+        }
+        var newData = [];
+        let l = Object.keys(datas).length
+        for (let i = 0; i < l; i++) {
+            const temp = datas[i];
+            newData.push(
+                [
+                    [
+                        { // Tarih
+                            title: EditDate(temp.DocumentDate.slice(0, 10)),
+                        },
+                        { // Fiş No
+                            title: temp.Oid,
+                        },
+                        { // Firma
+                            title: temp.SenderName,
+                        },
+                        { // Araç No
+                            title: temp.TransportWaybill.declarationNumber,
+                        },
+                        { // Ambalaj
+                            title: temp.TotalPackingQuantity
+                        },
+                    ]
+                ]
+            )
+        }
+        return newData;
+    }
+    catch (err) {
+        console.log(`HATA: ${err}. Konum: EditDatas`)
         return null;
     }
-    var newData = [];
-    let l = Object.keys(datas).length
-    for (let i = 0; i < l; i++) {
-        const temp = datas[i];
-        newData.push(
-            [
-                [
-                    { // Tarih
-                        title: temp.DocumentDate.slice(0, 10),
-                    },
-                    { // Fiş No
-                        title: temp.Oid,
-                    },
-                    { // Firma
-                        title: temp.SenderName,
-                    },
-                    { // Araç No
-                        title: temp.TransportWaybill.declarationNumber,
-                    },
-                    { // Ambalaj
-                        title: temp.TotalPackingQuantity
-                    },
-                ]
-            ]
-        )
-    }
-    return newData;
+
 }
+
 
 export default TransportList;

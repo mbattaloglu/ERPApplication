@@ -30,7 +30,7 @@ const MainMenu = ({ navigation }) => {
 
     const fetchImage = async () => {
       const data = await fetch(
-        Api.link + '/odata/Companies/GetCompanyImage()',
+        Api.link + '/odata/Companies/1/GetImage()',
         {
           headers: {
             Authorization: 'Bearer ' + User.token,
@@ -77,7 +77,7 @@ const MainMenu = ({ navigation }) => {
 
   return (
     <View >
-      {data && img ? (
+      {data ? (
         <ScrollView style={styles.imageBox} showsVerticalScrollIndicator={false}>
           <Image
             source={{ uri: `data:image/gif;base64,${img}` }}
@@ -95,7 +95,7 @@ const MainMenu = ({ navigation }) => {
             <Image style={styles.icon} source={Icons.phone} />
             <Text style={styles.title}>{data.PhoneNumber}</Text>
           </View>
-          <View style={{marginHorizontal: 20, borderWidth: 2, borderRadius: 20, borderColor: 'darkgray'}}>
+          <View style={{ marginHorizontal: 20/* , borderWidth: 2, borderRadius: 20, borderColor: 'darkgray' */ }}>
             <VictoryChart theme={VictoryTheme.material} domainPadding={50}>
               <VictoryAxis tickValues={[1, 2, 3]} tickFormat={['Borç', 'Alacak', 'Bakiye']} />
               <VictoryAxis dependentAxis tickFormat={(x) => (EditAmount(x))} />
@@ -115,7 +115,7 @@ const MainMenu = ({ navigation }) => {
 
         </ScrollView>
       ) : (
-        <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
         </View>
       )}
