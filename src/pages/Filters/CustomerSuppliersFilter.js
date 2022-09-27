@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import { View } from "react-native";
 import { Icons } from "../../components/Constants";
 import NewFilterLine from "../../components/NewFilterLine";
@@ -9,31 +9,19 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import DoubleButton from "../../components/DoubleButton";
 
-const HEIGHT = 180;
+const HEIGHT = 90;
 var whichDate = '';
 
 const datas = {
     startDate: {
-        name: 'DocumentDate',
+        name: 'TrxDate',
         value: undefined,
         process: 'ge'
     },
     endDate: {
-        name: 'DocumentDate',
+        name: 'TrxDate',
         value: undefined,
         process: 'le'
-    },
-    vehicle: {
-        name: 'TransportWaybill/declarationNumber',
-        value: '',
-        string: true,
-        process: 'eq'
-    },
-    company: {
-        name: 'SenderName',
-        value: '',
-        string: true,
-        process: 'eq'
     },
 }
 
@@ -44,10 +32,6 @@ function FilterReducer(state, action) {
                 return { ...state, startDate: { ...state.startDate, value: action.data } }
             case 'endDate':
                 return { ...state, endDate: { ...state.endDate, value: action.data } }
-            case 'vehicle':
-                return { ...state, vehicle: { ...state.vehicle, value: action.data ? `'${action.data}'` : undefined } }
-            case 'company':
-                return { ...state, company: { ...state.company, value: action.data ? `'${action.data}'` : undefined } }
         }
     }
     catch (err) {
@@ -56,18 +40,9 @@ function FilterReducer(state, action) {
     }
 }
 
-const TransportFilter = ({ navigation, route }) => {
+const CustomerSuppliersFilter = ({ navigation }) => {
 
     const [state, dispatch] = useReducer(FilterReducer, datas);
-
-    useMemo(() => {
-        if (route.params?.vehicle) {
-            dispatch({ type: 'vehicle', data: route.params.vehicle })
-        }
-        if (route.params?.company) {
-            dispatch({ type: 'company', data: route.params.company })
-        }
-    }, [route.params])
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -82,14 +57,14 @@ const TransportFilter = ({ navigation, route }) => {
 
     const handleConfirm = (date) => {
         date = JSON.stringify(date)?.slice(1, 11)
-        console.warn(date)
+        console.warn(date);
         hideDatePicker();
         if (whichDate == 'startDate')
             dispatch({ type: 'startDate', data: date })
         else
             dispatch({ type: 'endDate', data: date })
-
     };
+
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -112,24 +87,6 @@ const TransportFilter = ({ navigation, route }) => {
                     command={() => { showDatePicker('endDate') }}
                     deleteCommand={() => dispatch({ type: 'endDate', data: undefined })}
                 />
-                <NewFilterLine
-                    width={300}
-                    title={'Araç No'}
-                    temporaryFilter={'Araç seçiniz'}
-                    currentFilter={state.vehicle.value?.slice(1, state.vehicle.value.length - 1)}
-                    icon={Icons.search}
-                    command={() => navigation.navigate('FilterDatas', { type: 'vehicle' })}
-                    deleteCommand={() => dispatch({ type: 'vehicle', data: undefined })}
-                />
-                <NewFilterLine
-                    width={300}
-                    title={'Firma'}
-                    temporaryFilter={'Firma seçiniz'}
-                    currentFilter={state.company.value?.slice(1, state.company.value.length - 1)}
-                    icon={Icons.search}
-                    command={() => navigation.navigate('FilterDatas', { type: 'company' })}
-                    deleteCommand={() => dispatch({ type: 'company', data: undefined })}
-                />
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
@@ -138,12 +95,12 @@ const TransportFilter = ({ navigation, route }) => {
                 />
             </View >
             <DoubleButton
-                type={'transportList'}
+                type={'customerSuppliers'}
                 leftCommand={() => navigation.goBack()}
-                rightCommand={() => { navigation.navigate("TransportList", { filters: filterFormat(fuseFilter(state), " and ") }) }}
+                rightCommand={() => navigation.navigate("CustomerSuppliers", { filters: filterFormat(fuseFilter(state), " and ") })}
             />
         </View>
     )
 }
 
-export default TransportFilter;
+export default CustomerSuppliersFilter;

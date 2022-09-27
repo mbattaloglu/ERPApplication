@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { User } from "../../components/Constants";
 import SearchBar from "../../components/SearchBar";
 
@@ -25,9 +25,26 @@ const FilterDatas = ({ navigation, route }) => {
         setDatas(allDatas)
     }
 
+    const GetVehicleNames = async () => {
+        allDatas = await fetch('http://193.53.103.178:5312/api/odata/TransportWaybills?$select=declarationNumber&$orderby=declarationNumber',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + User.token,
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(res => res.value)
+        setDatas(allDatas)
+    }
+
     useMemo(() => {
         if (type == 'company') {
             GetSenderNames();
+        }
+        else if (type == 'vehicle') {
+            GetVehicleNames();
         }
     }, [])
 
@@ -40,7 +57,10 @@ const FilterDatas = ({ navigation, route }) => {
                             holderText={'Firma seçiniz...'}
                             commCallBack={(value) => {
                                 setDatas(allDatas.filter(function (e) {
-                                    return e.SenderName.toLowerCase().indexOf(value?.toLowerCase()) >= 0
+                                    if (e.SenderName)
+                                        return e.SenderName.toLowerCase().indexOf(value?.toLowerCase()) >= 0
+                                    else if (e.declarationNumber)
+                                        return e.declarationNumber.toLowerCase().indexOf(value?.toLowerCase()) >= 0
                                 }
                                 ))
                             }}
@@ -49,6 +69,7 @@ const FilterDatas = ({ navigation, route }) => {
                         <FlatList
                             data={datas}
                             key={(index) => index}
+                            onEndReachedThreshold={.5}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
                                     style={{
@@ -58,9 +79,9 @@ const FilterDatas = ({ navigation, route }) => {
                                         justifyContent: 'center',
                                         paddingLeft: 10
                                     }}
-                                    onPress={() => [navigation.navigate('TransportFilter', { company: item.SenderName })]}
+                                    onPress={() => [navigation.navigate('TransportFilter', item.SenderName ? { company: item?.SenderName } : { vehicle: item.declarationNumber })]}
                                 >
-                                    <Text style={{ fontSize: 17, color: '#343a40', fontWeight: '400' }}>{item.SenderName}</Text>
+                                    <Text style={{ fontSize: 17, color: '#343a40', fontWeight: '400' }}>{item.SenderName || item.declarationNumber}</Text>
                                 </TouchableOpacity>
                             )}
                         />

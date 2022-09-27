@@ -10,7 +10,9 @@ import { AuthContext } from "./Context";
 
 //#region Pages
 import CustomerSuppliers from "./src/pages/CustomerSuppliers";
+import CustomerSuppliersFilter from "./src/pages/Filters/CustomerSuppliersFilter";
 import Directives from "./src/pages/Directives";
+import DirectivesFilter from "./src/pages/Filters/DirectivesFilter";
 import TransportList from "./src/pages/TransportList";
 import TransportDetails from "./src/pages/TransportDetails";
 import Settings from "./src/pages/Settings";
@@ -41,9 +43,63 @@ const DirectivesScreen = ({ navigation }) => {
           },
           headerTintColor: 'white',
           headerTitleAlign: 'center',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("DirectivesFilter")}>
+              <Image source={Icons.filter} style={{ height: 20, width: 20, tintColor: 'white' }} />
+            </TouchableOpacity>
+          )
         }} />
-
+      <DirectivesStack.Screen
+        name="DirectivesFilter"
+        component={DirectivesFilter}
+        options={{
+          title: 'Talimatlarım',
+          headerStyle: {
+            backgroundColor: ThemeColors.directives.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
     </DirectivesStack.Navigator >
+  )
+}
+
+const CustomerSuppliersStack = createNativeStackNavigator();
+
+const CustomerSuppliersScreen = ({ navigation }) => {
+  return (
+    <CustomerSuppliersStack.Navigator
+      screenOptions={optionsScreen}>
+      <CustomerSuppliersStack.Screen
+        name="CustomerSuppliers"
+        component={CustomerSuppliers}
+        options={{
+          title: 'Hesap Ekstresi',
+          headerStyle: {
+            backgroundColor: ThemeColors.customerSuppliers.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("CustomerSuppliersFilter")}>
+              <Image source={Icons.filter} style={{ height: 20, width: 20, tintColor: 'white' }} />
+            </TouchableOpacity>
+          )
+        }} />
+      <TransportStack.Screen
+        name="CustomerSuppliersFilter"
+        component={CustomerSuppliersFilter}
+        options={{
+          title: 'Hesap Ekstresi',
+          headerStyle: {
+            backgroundColor: ThemeColors.customerSuppliers.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
+    </CustomerSuppliersStack.Navigator >
   )
 }
 
@@ -113,8 +169,6 @@ const TransportScreen = ({ navigation }) => {
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Müşteri Sevk Listesi /api/odata/TransportCards?$top=1&$select=SenderName,Oid,DocumentDate,TotalPackingQuantity
-
 const App = () => {
 
   const [userToken, setUserToken] = useState('');
@@ -150,7 +204,7 @@ const App = () => {
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={focused ? Icons.fill.home : Icons.outLine.home}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
                   />
                 )
               }}
@@ -165,7 +219,7 @@ const App = () => {
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={focused ? Icons.fill.transports : Icons.outLine.transports}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.SubHeaderBar : 'gray' }]}
                   />
                 ),
               }}
@@ -179,25 +233,21 @@ const App = () => {
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={focused ? Icons.fill.directives : Icons.outLine.directives}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.SubHeaderBar : 'gray' }]}
                   />
                 ),
               }}
             />
             <Tab.Screen
-              name="CustomerSuppliers"
-              component={CustomerSuppliers}
+              name="CustomerSuppliersScreen"
+              component={CustomerSuppliersScreen}
               options={{
                 title: 'Hesap Ekstresi',
-                headerStyle: {
-                  backgroundColor: ThemeColors.customerSuppliers.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
+                headerShown: false,
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={focused ? Icons.fill.suppliers : Icons.outLine.suppliers}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.SubHeaderBar : 'gray' }]}
                   />
                 ),
               }}
@@ -215,7 +265,7 @@ const App = () => {
                 tabBarIcon: ({ focused }) => (
                   <Image
                     source={focused ? Icons.fill.settings : Icons.outLine.settings}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.HeaderBar : 'gray' }]}
+                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
                   />
                 ),
               }}

@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useReducer } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
 
-import { MiddleLine, BottomLine } from "../components/NewConst";
+import { DataScreen } from "../components/NewConst";
 
 import { EditDate, Reducer } from "../components/MyFunctions";
-import { GetList, GetTotals, GetTransportCardsTotals } from "../components/ApiFunctions";
+import { GetList, GetTotals } from "../components/ApiFunctions";
+
+import { NoDataScreen, LoadingScreen } from "../components/ShortComponents";
 
 var skip = 0;
 var top = 15;
@@ -14,18 +16,22 @@ const datas = {
     lists: [],
     totals: [
         {
-            text: 'Toplam Çuval',
-            amount: 0
+            title: 'Çuval',
+            value: 0
         },
         {
-            text: 'Toplam KG',
-            amount: 0
+            title: 'KG',
+            value: 0
         },
         {
-            text: 'Toplam Hacim',
-            amount: 0
+            title: 'Hacim',
+            value: 0
         },
     ],
+    listDetails: {
+        filter: false,
+        amount: 0,
+    },
     noData: false,
 }
 
@@ -48,9 +54,12 @@ const TransportList = ({ navigation, route }) => {
      */
     async function GetAll(filters = '') {
         setLoading(true);
-        const lists = EditDatas(await GetList('TransportCards', 0, top, filters)) // SORUN: Verileri hemen vermiyor!
-        const totals = await GetTotals('TransportCards', filters)
-        dispatch({ type: 'first', lists: lists, totals: [totals.Packing, totals.Weight, totals.Volume] })
+        const lists = await GetList('TransportCards', 0, top, filters) // SORUN: Verileri hemen vermiyor!
+        var totals = await GetTotals('TransportCards', filters)
+        totals = totals[0]
+        console.log(totals)
+        const filter = filters.length > 0
+        dispatch({ type: 'first', lists: EditDatas(lists['value']), filter: filter, totals: [totals.Packing, totals.Weight, totals.Volume ? parseFloat(totals.Volume).toFixed(2) : 0], total: lists['@odata.count'] })
         skip = top;
         console.log("Tüm veriler sıfırlandı.")
         setLoading(false);
@@ -61,8 +70,8 @@ const TransportList = ({ navigation, route }) => {
      * @param filters Filtre ekler. (Opsiyonel)
      */
     async function GetNewDatas(filters = '') {
-        const newDatas = EditDatas(await GetList('TransportCards', skip, top, filters))
-        dispatch({ type: 'add', lists: newDatas })
+        const newDatas = await GetList('TransportCards', skip, top, filters)
+        dispatch({ type: 'add', lists: EditDatas(newDatas['value']) })
         skip += top;
         console.log("Yenileri eklendi!");
     }
@@ -111,45 +120,36 @@ const TransportList = ({ navigation, route }) => {
     ]
 
     return (
-        <View style={{ justifyContent: 'space-between', flex: 1 }}>
+        <View style={{ justifyContent: 'space-between', flex: 1, backgroundColor: 'white' }}>
             {
-                state.lists?.length > 0 && !loading ? (
+                state.lists.length > 0 && !loading ? (
                     <View style={{ flex: 1 }}>
-                        <MiddleLine
-                            items={state.lists}
+                        <DataScreen
+                            items={state}
                             itemStyles={itemStyles}
                             boxStyles={boxStyles}
                             onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
                             feetComp={!state.noData &&
-                                <ActivityIndicator
-                                    style={{ flex: 1 }}
-                                    color={ThemeColors.transportList.HeaderBar}
-                                    size={'large'}
-                                />}
+                                <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />}
                             canClick //TODO: Destroy this
                             command={(oid) => navigation.navigate('TransportDetails', { oid })}
                             titles={titles}
+                            color={'transportList'}
                         />
                     </View>
                 ) : (
                     <>
                         {
                             state.noData && !loading ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }} >
-                                    <Text style={{ color: 'black', fontSize: 20 }}>Hiç veri yok</Text>
-                                </View>
+                                <NoDataScreen />
                             ) : (
-                                <ActivityIndicator
-                                    style={{ flex: 1 }}
-                                    color={ThemeColors.transportList.HeaderBar}
-                                    size={'large'}
-                                />
+                                <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />
                             )
                         }
                     </>
                 )
             }
-            <BottomLine items={state.totals} col={ThemeColors.transportList.SubHeaderBar} />
+
         </View>
     )
 }

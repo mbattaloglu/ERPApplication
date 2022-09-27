@@ -1,63 +1,75 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { View, Text } from "react-native";
-import { User, ThemeColors } from "../components/Constants";
+import React, { useMemo, useState, useReducer } from "react";
+import { View } from "react-native";
+import { ThemeColors } from "../components/Constants";
 import { toAmount } from "../components/ConstFunctions";
 
-import { HeaderLine, MiddleLine, BottomLine } from "../components/NewConst";
+import { DataScreen } from "../components/NewConst";
 
-import { EditDate } from "../components/MyFunctions";
-import { GetCustomerSuppliers } from "../components/ApiAdresses";
+import { EditDate, Reducer } from "../components/MyFunctions";
+import { GetList, GetTotals } from "../components/ApiFunctions";
 
-var MaxTop = 100;
+import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
+
 var skip = 0;
 var top = 15;
+const type = 'FinancialTrxes';
 
+const datas = {
+    lists: [],
+    totals: [
+        {
+            title: 'Borç',
+            value: '0',
+            color: 'red'
+        },
+        {
+            title: 'Alacak',
+            value: '0',
+            color: 'green'
+        },
+        {
+            title: 'Bakiye',
+            value: '0',
+            color: ''
+        },
+    ],
+    listDetails: {
+        filter: false,
+        amount: 0,
+    },
+    noData: false,
+}
 
-const CustomerSuppliers = ({ navigation }) => {
+const CustomerSuppliers = ({ navigation, route }) => {
 
-    console.log("Yenilendi.")
+    //İlk veriler geldi mi?
+    const [loading, setLoading] = useState(false);
 
-    const GetTotal = async () => {
-        try {
-            console.log("Toplam aldi.")
-            const list = await fetch('http://193.53.103.178:5312/api/odata/CustomerSuppliers?$expand=FinancialTrxs($select=Debit,Credit)&$select=FinancialTrxs', {
-                method: 'GET', /* or POST/PUT/PATCH/DELETE */
-                headers: {
-                    'Authorization': 'Bearer ' + User.token,
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(res => res.json())
-                .then(res => res.value[0])
-                .then(res => res.FinancialTrxs)
-                .catch((err) => console.log("Hata: ", err));
-            let l = list.length;
-            let debit = 0;
-            let credit = 0;
-            for (let i = 0; i < l; i++) {
-                debit += list[i].Debit;
-                credit += list[i].Credit;
-            }
-            //setTotalDebit(debit); // 2
-            //setTotalCredit(credit); // 3
-            //setTotalBakiye(debit - credit); // 4
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const [items, setItems] = useState([]);
-
-    const GetData = async () => {
-        setItems([...items, ...EditDatas(await GetCustomerSuppliers(skip, top))])
-        skip += top;
-        console.log("Veriler geldi!")
-    }
+    //Tüm verileri tutuyor: 'lists, totals, noData'
+    const [state, dispatch] = useReducer(Reducer, datas);
 
     useMemo(() => {
-        GetData();
-        //GetTotal();
-    }, [])
+        GetAll(route.params?.filters);
+    }, [route.params])
+
+    async function GetAll(filters = '') {
+        setLoading(true);
+        const lists = await GetList(type, 0, top, filters) // SORUN: Verileri hemen vermiyor!
+        var totals = await GetTotals(type, filters)
+        totals = totals[0]
+        const filter = filters.length > 0
+        dispatch({ type: 'firstCustomerSuppliers', lists: EditDatas(lists['value']), filter: filter, totals: [totals.Debit, totals.Credit, totals.Amount], total: lists['@odata.count'] })
+        skip = top;
+        console.log("Tüm veriler sıfırlandı.")
+        setLoading(false);
+    }
+
+    async function GetNewDatas(filters = '') {
+        const newDatas = await GetList(type, skip, top, filters)
+        dispatch({ type: 'add', lists: EditDatas(newDatas['value']) })
+        skip += top;
+        console.log("Yenileri eklendi!");
+    }
 
     const titles = [
         { // Tarih
@@ -106,45 +118,38 @@ const CustomerSuppliers = ({ navigation }) => {
         height: 153
     }
 
-    const bottomList = [
-        {
-            text: 'Borcu',
-            amount: '0'
-        },
-        {
-            text: 'Alacağı',
-            amount: '0'
-        },
-        {
-            text: 'Bakiye',
-            amount: '0'
-        },
-    ]
-
 
     return (
-        <>
+        <View style={{ justifyContent: 'space-between', flex: 1, backgroundColor: 'white' }}>
             {
-                items.length > 0 ? (
-                    <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <View style={{ flex: 1 }}>
-                            <MiddleLine
-                                items={items}
-                                itemStyles={itemStyles}
-                                boxStyles={boxStyles}
-                                onEnd={() => skip < MaxTop && GetData()}
-                                titles={titles}
-                            />
-                        </View>
-                        <BottomLine items={bottomList} col={ThemeColors.customerSuppliers.SubHeaderBar} />
+                state.lists.length > 0 && !loading ? (
+                    <View style={{ flex: 1 }}>
+                        <DataScreen
+                            items={state}
+                            itemStyles={itemStyles}
+                            boxStyles={boxStyles}
+                            onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
+                            feetComp={!state.noData &&
+                                <LoadingScreen color={ThemeColors.customerSuppliers.SubHeaderBar} />}
+                            //canClick //TODO: Destroy this
+                            //command={(oid) => navigation.navigate('TransportDetails', { oid })}
+                            titles={titles}
+                            color={'customerSuppliers'}
+                        />
                     </View>
                 ) : (
-                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>Yükleniyor...</Text>
-                    </View>
+                    <>
+                        {
+                            state.noData && !loading ? (
+                                <NoDataScreen />
+                            ) : (
+                                <LoadingScreen color={ThemeColors.customerSuppliers.SubHeaderBar} />
+                            )
+                        }
+                    </>
                 )
             }
-        </>
+        </View>
     )
 }
 

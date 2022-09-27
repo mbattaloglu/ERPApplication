@@ -1,19 +1,23 @@
-import React from "react";
-import { View, StyleSheet, Text, FlatList, Dimensions, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image, Dimensions } from "react-native";
+import { Icons, StylesAll, ThemeColors } from "./Constants";
 
-const WIDTH = Dimensions.get('window').width;
 const BORDER_COLOR = 'darkgray';
 
-const MiddleLine = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp }) => {
-    //console.log(Object.keys(items).length)
+const HEIGHT = Dimensions.get('window').height;
+const touchLine = HEIGHT * 1.5 / 35
+const totalBox = HEIGHT * 8.5 / 35
+
+const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp, color, type, addCommand }) => {
     return (
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ flex: 1 }}>
             <FlatList
-                data={items}
+                style={{ marginBottom: touchLine }}
+                showsVerticalScrollIndicator={false}
+                data={items.lists}
                 onEndReached={() => onEnd()}
                 onEndReachedThreshold={.5} // TODO: Calculate this
                 ListFooterComponent={feetComp}
-                //TODO: Add loading text
                 //TODO: Add key, if it necessary
                 renderItem={({ item, index }) => {
                     return (
@@ -22,131 +26,186 @@ const MiddleLine = ({ items, onEnd, itemStyles, canClick, command, titles, boxSt
                                 items={item}
                                 itemStyles={itemStyles}
                                 lineColor={index % 2 == 0 ? '#FEFFFF' : '#f8f9fa'}
-                                command={(oid) => command(oid)}
                                 canClick={canClick}
+                                command={(oid) => command(oid)}
                                 titles={titles}
                                 boxStyles={boxStyles}
                             />
                         )
                     )
-                }
-
-                }
+                }}
             />
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    marginHorizontal: '7%',
+                    alignSelf: 'center'
+                }}>
+                {
+                    type == 'Directives' && <AddButon addCommand={addCommand} />
+                }
+                <OpenScreen items={[items.totals, items.listDetails]} color={color} />
+            </View>
 
         </View>
     )
 }
 
-
-const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyles }) => {
-    var l = Object.keys(itemStyles).length;
-
+const AddButon = ({ addCommand }) => {
     return (
         <TouchableOpacity
-            style={{
-                flexDirection: 'row',
-                backgroundColor: lineColor,
-                alignItems: 'center',
-                marginVertical: 7,
-                paddingHorizontal: 10,
-                justifyContent: 'space-between',
-                width: WIDTH,
-                height: boxStyles.height,
-                borderTopWidth: .5,
-                borderBottomWidth: .5,
-                borderColor: BORDER_COLOR
-            }}
-            disabled={!canClick}
-            onPress={() => command(items[0][1].title)}
+            style={{ alignSelf: 'center', marginBottom: 5 }}
+            onPress={addCommand}
         >
-            {/* Sol Kutu */}
-            <View>
-                {
-                    titles.map((item, index) => {
-                        if (index == 0)
-                            return;
-                        return (
-                            <View
-                                style={{
-                                    flex: itemStyles[index]?.flex ? itemStyles[index].flex : 1,
-                                    justifyContent: 'center'
-                                }}
-                                key={index}
-                            >
-                                <Text
-                                    style={{ fontWeight: '500', color: 'black' }}
-                                >{item.text ? item.text : items[0][index]?.mainTitle}</Text>
-                            </View>
-                        )
-                    })
-                }
-            </View>
-
-            {/* Orta */}
-            <View style={{ flex: 1 }}>
-                {
-                    items[0].map((item, index) => {
-                        if (index == 0)
-                            return;
-                        return (
-                            <View
-                                style={{
-                                    flex: itemStyles[index]?.flex ? itemStyles[index].flex : 1,
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}
-                                key={index}
-                            >
-                                <Text>  :  </Text>
-                                <Text
-                                    style={{ color: item?.color ? item.color : 'black', flex: 1 }}
-                                    numberOfLines={itemStyles[index]?.numberOfLines ? itemStyles[index].numberOfLines : 1}
-                                >{item.title}</Text>
-                            </View>
-                        )
-                    })
-                }
-            </View>
-            {/* Sağ Kutu */}
-            <View>
-                <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                    <Text
-                        style={{ color: 'black' }}
-                    >{items[0][0].title}</Text>
-                    {
-                        boxStyles?.icon ? (
-                            <Image source={boxStyles.icon} style={styles.icon} />
-                        ) : (
-                            null
-                        )
-                    }
-                </View>
-            </View>
-
+            <Image source={Icons.plus} style={{ height: 40, width: 40 }} />
         </TouchableOpacity>
     )
 }
 
-const BottomLine = ({ items, col }) => {
-    //console.log(items)
+const OpenScreen = ({ items, color }) => {
+    const [active, setActive] = useState(false)
     return (
-        <View style={{ flexDirection: 'row', backgroundColor: col, borderWidth: .5, borderColor: BORDER_COLOR }}>
+        <>
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => setActive(!active)}
+                style={{
+                    height: HEIGHT * 1.5 / 35,
+                    backgroundColor: ThemeColors[color]?.SubHeaderBar,
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                <Image style={{ width: 15, height: 15, tintColor: 'white', transform: [{ rotate: active ? '90deg' : '270deg' }] }} source={Icons.arrow} />
+            </TouchableOpacity>
             {
-                items.map((item, index) => (
-                    <View style={{ flex: 1, borderLeftWidth: index != 0 ? .5 : 0, borderColor: BORDER_COLOR }} key={index}>
-
-                        <View style={{ height: 30, justifyContent: 'center', borderBottomWidth: .5, borderColor: BORDER_COLOR }}>
-                            <Text style={styles.textStyle}>{item.text}</Text>
-                        </View>
-
-                        <View style={{ height: 30, justifyContent: 'center' }}>
-                            <Text style={styles.textStyle}>{item.amount}</Text>
-                        </View>
-
+                active && (
+                    <View style={{ height: totalBox, borderLeftWidth: 1, borderRightWidth: 1, borderColor: 'lightgray', backgroundColor: 'white' }}>
+                        <TotalScreen items={items[0]} />
+                        <FilterLine items={items[1]} />
                     </View>
-                ))
+                )
             }
+        </>
+    )
+}
+
+const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyles }) => {
+    return (
+        <View style={[StylesAll.profileCard, { backgroundColor: lineColor }]}>
+            <TouchableOpacity
+                disabled={!canClick}
+                onPress={() => command(items[0][1].title)}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        height: boxStyles.height,
+                    }}>
+                    {/* Sol Kutu */}
+                    <View style={{ flex: 1.4 }}>
+                        {
+                            titles.map((item, index) => {
+                                if (index == 0)
+                                    return;
+                                return (
+                                    <View
+                                        style={{
+                                            flex: itemStyles[index]?.flex ? itemStyles[index].flex : 1,
+                                            justifyContent: 'center'
+                                        }}
+                                        key={index}
+                                    >
+                                        <Text
+                                            style={{ fontWeight: '500', color: 'black' }}
+                                        >{item.text ? item.text : items[0][index]?.mainTitle}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
+
+                    {/* Orta */}
+                    <View style={{ flex: 3.5 }}>
+                        {
+                            items[0].map((item, index) => {
+                                if (index == 0)
+                                    return;
+                                return (
+                                    <View
+                                        style={{
+                                            flex: itemStyles[index]?.flex ? itemStyles[index].flex : 1,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                        }}
+                                        key={index}
+                                    >
+                                        <Text style={{ color: 'black' }}>  :  </Text>
+                                        <Text
+                                            style={{ color: item?.color ? item.color : 'black', flex: 1 }}
+                                            numberOfLines={itemStyles[index]?.numberOfLines ? itemStyles[index].numberOfLines : 1}
+                                        >{item.title}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
+                    {/* Sağ Kutu */}
+                    <View style={{ flex: 1.5 }}>
+                        <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                            <Text
+                                style={{ color: 'black', textAlign: 'right' }}
+                            >{items[0][0].title}</Text>
+                            {
+                                boxStyles?.icon ? (
+                                    <Image source={boxStyles.icon} style={styles.icon} />
+                                ) : (
+                                    null
+                                )
+                            }
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity >
+        </View>
+    )
+}
+
+
+const TotalScreen = ({ items, style }) => {
+    return (
+        <View style={[StylesAll.profileCard, { paddingHorizontal: 0, justifyContent: 'center' }, style]}>
+            <Text style={[styles.headerText, styles.headerTitle, { fontWeight: '700' }]}>- Toplam -</Text>
+            <View style={{ flexDirection: 'row' }}>
+                {
+                    items.map((item, index) => {
+                        return (
+                            <View style={{ flex: 1, marginTop: 5 }} key={index}>
+                                <Text style={[styles.headerText, styles.headerTitle]}>{item.title}</Text>
+                                <Text style={[styles.headerText, styles.headerValue, { marginTop: 5, color: item.color || 'black' }]}>{item.value}</Text>
+                            </View>
+                        )
+                    })
+                }
+            </View>
+        </View>
+    )
+}
+
+const FilterLine = ({ items }) => {
+    return (
+        <View style={[StylesAll.profileCard, { flex: 1, flexDirection: 'row' }]}>
+            <View style={StylesAll.container}>
+                <Text style={[styles.headerText, styles.headerTitle]}>Filtre</Text>
+                <Text style={[styles.headerText, styles.headerValue]}>{items.filter ? 'Var' : 'Yok'}</Text>
+            </View>
+            <View style={StylesAll.container}>
+                <Text style={[styles.headerText, styles.headerTitle]}>Sonuç</Text>
+                <Text style={[styles.headerText, styles.headerValue]}>{items.amount}</Text>
+            </View>
         </View>
     )
 }
@@ -204,7 +263,20 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginBottom: 10,
         tintColor: '#343a40'
-    }
+    },
+    headerText: {
+        fontSize: 14,
+        textAlignVertical: 'center',
+        textAlign: 'center',
+    },
+    headerTitle: {
+        fontWeight: '500',
+        color: '#323232'
+    },
+    headerValue: {
+        fontWeight: '400',
+        color: '#444444',
+    },
 })
 
-export { MiddleLine, BottomLine, EditDatas };
+export { DataScreen, TotalScreen, EditDatas };

@@ -11,6 +11,8 @@ import ImageIcon from "../images/icons/image.png"
 import FilterIcon from "../images/icons/filter.png"
 import CancelIcon from "../images/icons/cancel.png"
 import PhoneIcon from "../images/icons/phone.png"
+import ArrowIcon from "../images/icons/arrow.png"
+import PlusIcon from "../images/icons/plus.png"
 
 //#region OutLine
 import HomeIcon_OutLine from "../images/icons/OutLine/home.png"
@@ -31,16 +33,19 @@ import SettingsIcon_Fill from "../images/icons/Fill/settings.png"
 
 const ThemeColors = {
     transportList: {
-        HeaderBar: '#8c2f39',
-        SubHeaderBar: '#b23a48'
+        HeaderBar: '#DD2C2F',
+        SubHeaderBar: '#E35053',
+        SecondSubHeaderBar: '#EB8587'
     },
     directives: {
-        HeaderBar: '#2d6a4f',
-        SubHeaderBar: '#40916c'
+        HeaderBar: '#006400',
+        SubHeaderBar: '#007200',
+        SecondSubHeaderBar: '#77A677'
     },
     customerSuppliers: {
-        HeaderBar: '#023e8a',
-        SubHeaderBar: '#0077b6'
+        HeaderBar: '#0353A4',
+        SubHeaderBar: '#0466C8',
+        SecondSubHeaderBar: '#5995D1'
     },
     Home: {
         HeaderBar: '#33415c',
@@ -64,6 +69,8 @@ const Icons = {
     filter: FilterIcon,
     cancel: CancelIcon,
     phone: PhoneIcon,
+    arrow: ArrowIcon,
+    plus: PlusIcon,
     outLine: {
         home: HomeIcon_OutLine,
         transports: TransportsIcon_OutLine,
@@ -96,8 +103,21 @@ const StylesAll = StyleSheet.create({
     icon: {
         height: 30,
         width: 30,
-
-    }
+    },
+    profileCard: {
+        marginVertical: '2%',
+        marginHorizontal: '3%',
+        elevation: 3,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingHorizontal: '4%',
+        paddingVertical: '2%',
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 })
 
 export { ThemeColors, Icons, Images, User, Api, StylesAll };

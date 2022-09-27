@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity, Text } from "react-native";
-import { ThemeColors } from "./Constants";
 
 const SearchBar = ({ commCallBack, resetCallBack, holderText }) => {
 
