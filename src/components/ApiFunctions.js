@@ -104,4 +104,32 @@ async function GetTransportListsDetails(oid) {
     }
 }
 
-export { GetList, GetTotals, GetTransportListsDetails }
+async function GetUserInfo() {
+    try {
+        const data = await fetch
+            (
+                (
+                    Api.link +
+                    '/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name)'
+                ),
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + User.token,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then(res => res.json())
+            .then(res => res.value)
+            .catch((err) => {
+                console.log(`HATA: ${err}. Konum: GetUserInfo()/try/fetch()/catch`)
+                return {}
+            });
+        return data
+    } catch (err) {
+        console.log(`HATA: ${err}. Konum: GetTransportGetUserInfoListsDetails()/catch()`)
+        return {}
+    }
+};
+
+export { GetList, GetTotals, GetTransportListsDetails, GetUserInfo }

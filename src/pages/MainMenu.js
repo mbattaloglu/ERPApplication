@@ -1,35 +1,63 @@
 import { StyleSheet, Image, Text, View, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Api, Icons, User, StylesAll, ThemeColors } from '../components/Constants';
 
 import { VictoryBar, VictoryTheme, VictoryChart, VictoryAxis } from 'victory-native';
+import { GetTotals, GetUserInfo } from '../components/ApiFunctions';
 
 const WIDTH = Dimensions.get('window').width
 
+const chartDatas = {
+  chart: [
+    {
+      type: 'Borç',
+      amount: undefined
+    },
+    {
+      type: 'Alacak',
+      amount: undefined
+    },
+    {
+      type: 'Bakiye',
+      amount: undefined
+    }
+  ],
+  userInfo: {},
+  ready: false
+}
+
+function Reducer(state, action) {
+  try {
+    return {
+      chart: state.chart.map((item, index) => {
+        return { ...item, amount: action.datas[index] }
+      }),
+      userInfo: action.userInfo,
+      ready: true
+    }
+  } catch (err) {
+    console.log("HATAAAAAA")
+    return state
+  }
+}
+
 const MainMenu = ({ navigation }) => {
-  const [data, setData] = React.useState([]);
   const [img, setImg] = React.useState();
+  const [state, dispatch] = useReducer(Reducer, chartDatas)
+
+  async function GetDatas() {
+    const chartData = await GetTotals('FinancialTrxes')
+    const userInfo = await GetUserInfo()
+    dispatch({ datas: [chartData[0].Debit, -chartData[0].Credit, chartData[0].Amount], userInfo: userInfo[0] })
+    User.id = state.userInfo.Oid;
+    User.defaultCurrencyType = state.userInfo.DefaultCurrencyType.Name;
+  }
 
   useEffect(() => { //Performans: 2 kez çekiyor.
-    User.id = data.Oid;
-    User.defaultCurrencyType = data?.DefaultCurrencyType?.Name;
-  }, [data])
+    GetDatas()
+  }, [])
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetch(
-        Api.link + '/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name)',
-        {
-          headers: {
-            Authorization: 'Bearer ' + User.token,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      const json = await data.json();
-      setData(...json.value);
-    };
-
     const fetchImage = async () => {
       const data = await fetch(
         Api.link + '/odata/Companies/1/GetImage()',
@@ -46,25 +74,8 @@ const MainMenu = ({ navigation }) => {
       console.log("Bitti");
     };
 
-    fetchData().catch(err => console.log(err));
     fetchImage().catch(err => console.log(err));
   }, []);
-
-  const veri = [
-    {
-      type: 'Borç',
-      amount: 1291028
-    },
-    {
-      type: 'Alacak',
-      amount: -1017028
-    },
-    {
-      type: 'Bakiye',
-      amount: 274000
-
-    }
-  ]
 
   function EditAmount(amount) { // TODO: Query Amount. WARNING
     var newAmount = '';
@@ -79,13 +90,13 @@ const MainMenu = ({ navigation }) => {
 
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
-      {data && img ? (
+      {img && state?.ready ? (
         <ScrollView style={styles.imageBox} showsVerticalScrollIndicator={false}>
           <View style={[StylesAll.profileCard, { height: 160 }]}>
             <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={styles.title}>{data.Code}</Text>
-              <Text style={styles.title}>{data.Name}</Text>
-              <Text style={[styles.title, { textAlign: 'right' }]}>{data.Title}</Text>
+              <Text style={styles.title}>{state.userInfo.Code}</Text>
+              <Text style={styles.title}>{state.userInfo.Name}</Text>
+              <Text style={[styles.title, { textAlign: 'right' }]}>{state.userInfo.Title}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Image
@@ -94,7 +105,7 @@ const MainMenu = ({ navigation }) => {
               <View style={{ flex: 1.5, alignItems: 'center', justifyContent: 'flex-end' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image style={styles.icon} source={Icons.phone} />
-                  <Text style={[styles.title, { color: '#38A4C6', fontWeight: 'normal' }]}>{data.PhoneNumber}</Text>
+                  <Text style={[styles.title, { color: '#38A4C6', fontWeight: 'normal' }]}>{state.userInfo.PhoneNumber}</Text>
                 </View>
               </View>
             </View>
@@ -105,7 +116,7 @@ const MainMenu = ({ navigation }) => {
               <VictoryAxis tickValues={[1, 2, 3]} tickFormat={['Borç', 'Alacak', 'Bakiye']} />
               <VictoryAxis dependentAxis tickFormat={(x) => (EditAmount(x))} />
               <VictoryBar
-                data={veri}
+                data={state.chart}
                 barWidth={40}
                 x='type'
                 y='amount'

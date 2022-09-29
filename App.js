@@ -18,6 +18,7 @@ import TransportDetails from "./src/pages/TransportDetails";
 import Settings from "./src/pages/Settings";
 import TransportFilter from "./src/pages/Filters/TransportFilter";
 import FilterDatas from "./src/pages/Filters/FilterDatas";
+import PostDirective from "./src/pages/PostDirective";
 //#endregion
 
 
@@ -32,7 +33,11 @@ const DirectivesStack = createNativeStackNavigator();
 const DirectivesScreen = ({ navigation }) => {
   return (
     <DirectivesStack.Navigator
-      screenOptions={optionsScreen}>
+      screenOptions={{
+        statusBarColor: ThemeColors.directives.HeaderBar,
+        navigationBarColor: 'white',
+        animation: 'none'
+      }}>
       <DirectivesStack.Screen
         name="Directives"
         component={Directives}
@@ -48,6 +53,17 @@ const DirectivesScreen = ({ navigation }) => {
               <Image source={Icons.filter} style={{ height: 20, width: 20, tintColor: 'white' }} />
             </TouchableOpacity>
           )
+        }} />
+      <DirectivesStack.Screen
+        name="PostDirective"
+        component={PostDirective}
+        options={{
+          title: 'Yeni Talimat',
+          headerStyle: {
+            backgroundColor: ThemeColors.directives.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
         }} />
       <DirectivesStack.Screen
         name="DirectivesFilter"
@@ -70,7 +86,11 @@ const CustomerSuppliersStack = createNativeStackNavigator();
 const CustomerSuppliersScreen = ({ navigation }) => {
   return (
     <CustomerSuppliersStack.Navigator
-      screenOptions={optionsScreen}>
+      screenOptions={{
+        statusBarColor: ThemeColors.customerSuppliers.HeaderBar,
+        navigationBarColor: 'white',
+        animation: 'none'
+      }}>
       <CustomerSuppliersStack.Screen
         name="CustomerSuppliers"
         component={CustomerSuppliers}
@@ -108,7 +128,11 @@ const TransportStack = createNativeStackNavigator();
 const TransportScreen = ({ navigation }) => {
   return (
     <TransportStack.Navigator
-      screenOptions={optionsScreen}>
+      screenOptions={{
+        statusBarColor: ThemeColors.transportList.HeaderBar,
+        navigationBarColor: 'white',
+        animation: 'none'
+      }}>
       <TransportStack.Screen
         name="TransportList"
         component={TransportList}

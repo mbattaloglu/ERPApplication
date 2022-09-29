@@ -39,7 +39,7 @@ const datas = {
 }
 
 
-const Directives = ({ route }) => {
+const Directives = ({ navigation, route }) => {
 
     //İlk veriler geldi mi?
     const [loading, setLoading] = useState(false);
@@ -136,7 +136,7 @@ const Directives = ({ route }) => {
                 state.lists.length > 0 && !loading ? (
                     <View style={{ flex: 1 }}>
                         <DataScreen
-                        type={'Directives'}
+                            type={'Directives'}
                             items={state}
                             itemStyles={itemStyles}
                             boxStyles={boxStyles}
@@ -151,15 +151,16 @@ const Directives = ({ route }) => {
                                     [
                                         {
                                             text: "İptal",
-                                            onPress: () => {},
+                                            onPress: () => { },
                                             style: "cancel"
                                         },
-                                        { text: "Devam", onPress: () => {} }
+                                        { text: "Devam", onPress: () => { } }
                                     ]
                                 );
                             }}
                             titles={titles}
                             color={'directives'}
+                            addCommand={() => navigation.navigate("PostDirective")}
                         />
                     </View>
                 ) : (
