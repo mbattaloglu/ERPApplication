@@ -1,9 +1,9 @@
 import { StyleSheet, Image, Text, View, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
 import React, { useEffect, useReducer } from 'react';
-import { Api, Icons, User, StylesAll, ThemeColors } from '../components/Constants';
+import { Icons, User, StylesAll, ThemeColors } from '../components/Constants';
 
 import { VictoryBar, VictoryTheme, VictoryChart, VictoryAxis } from 'victory-native';
-import { GetTotals, GetUserInfo } from '../components/ApiFunctions';
+import { GetImage, GetTotals, GetUserInfo } from '../components/ApiFunctions';
 
 const WIDTH = Dimensions.get('window').width
 
@@ -23,6 +23,7 @@ const chartDatas = {
     }
   ],
   userInfo: {},
+  image: '',
   ready: false
 }
 
@@ -33,6 +34,7 @@ function Reducer(state, action) {
         return { ...item, amount: action.datas[index] }
       }),
       userInfo: action.userInfo,
+      image: action.image,
       ready: true
     }
   } catch (err) {
@@ -42,40 +44,21 @@ function Reducer(state, action) {
 }
 
 const MainMenu = ({ navigation }) => {
-  const [img, setImg] = React.useState();
   const [state, dispatch] = useReducer(Reducer, chartDatas)
 
   async function GetDatas() {
-    const chartData = await GetTotals('FinancialTrxes')
-    const userInfo = await GetUserInfo()
-    dispatch({ datas: [chartData[0].Debit, -chartData[0].Credit, chartData[0].Amount], userInfo: userInfo[0] })
+    let chartData = await GetTotals('FinancialTrxes')
+    chartData = chartData[0]
+    let userInfo = await GetUserInfo()
+    let image = await GetImage()
+    dispatch({ datas: [chartData.Debit, -chartData.Credit, chartData.Amount], userInfo: userInfo, image: image })
     User.id = state.userInfo.Oid;
-    User.defaultCurrencyType = state.userInfo.DefaultCurrencyType.Name;
+    User.defaultCurrencyType = state.userInfo?.DefaultCurrencyType?.Name;
   }
 
   useEffect(() => { //Performans: 2 kez çekiyor.
     GetDatas()
   }, [])
-
-  React.useEffect(() => {
-    const fetchImage = async () => {
-      const data = await fetch(
-        Api.link + '/odata/Companies/1/GetImage()',
-        {
-          headers: {
-            Authorization: 'Bearer ' + User.token,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      const json = await data.json();
-      const image = json.value;
-      setImg(image);
-      console.log("Bitti");
-    };
-
-    fetchImage().catch(err => console.log(err));
-  }, []);
 
   function EditAmount(amount) { // TODO: Query Amount. WARNING
     var newAmount = '';
@@ -90,7 +73,7 @@ const MainMenu = ({ navigation }) => {
 
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
-      {img && state?.ready ? (
+      {state?.ready ? (
         <ScrollView style={styles.imageBox} showsVerticalScrollIndicator={false}>
           <View style={[StylesAll.profileCard, { height: 160 }]}>
             <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -100,7 +83,7 @@ const MainMenu = ({ navigation }) => {
             </View>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Image
-                source={{ uri: `data:image/gif;base64,${img}` }}
+                source={{ uri: `data:image/gif;base64,${state.image}` }}
                 style={styles.image}></Image>
               <View style={{ flex: 1.5, alignItems: 'center', justifyContent: 'flex-end' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -112,7 +95,7 @@ const MainMenu = ({ navigation }) => {
           </View>
 
           <View style={[StylesAll.profileCard, { overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }]}>
-            <VictoryChart theme={VictoryTheme.material} domainPadding={50} width={WIDTH / 1.2} height={300}>
+            <VictoryChart theme={VictoryTheme.material} domainPadding={50} width={WIDTH / 1.2} /* height={300} */>
               <VictoryAxis tickValues={[1, 2, 3]} tickFormat={['Borç', 'Alacak', 'Bakiye']} />
               <VictoryAxis dependentAxis tickFormat={(x) => (EditAmount(x))} />
               <VictoryBar

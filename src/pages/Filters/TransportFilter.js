@@ -8,6 +8,7 @@ import { EditDate, filterFormat, fuseFilter, OdataFilterFormat } from "../../com
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import DoubleButton from "../../components/DoubleButton";
+import { GetSenderNames, GetVehicleNames } from "../../components/ApiFunctions";
 
 const HEIGHT = 180;
 var whichDate = '';
@@ -44,9 +45,9 @@ function FilterReducer(state, action) {
                 return { ...state, startDate: { ...state.startDate, value: action.data } }
             case 'endDate':
                 return { ...state, endDate: { ...state.endDate, value: action.data } }
-            case 'vehicle':
+            case 'declarationNumber':
                 return { ...state, vehicle: { ...state.vehicle, value: action.data ? `'${action.data}'` : undefined } }
-            case 'company':
+            case 'SenderName':
                 return { ...state, company: { ...state.company, value: action.data ? `'${action.data}'` : undefined } }
         }
     }
@@ -61,12 +62,8 @@ const TransportFilter = ({ navigation, route }) => {
     const [state, dispatch] = useReducer(FilterReducer, datas);
 
     useMemo(() => {
-        if (route.params?.vehicle) {
-            dispatch({ type: 'vehicle', data: route.params.vehicle })
-        }
-        if (route.params?.company) {
-            dispatch({ type: 'company', data: route.params.company })
-        }
+        if (route.params?.type)
+            dispatch({ type: route.params.type, data: route.params.data })
     }, [route.params])
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -118,8 +115,8 @@ const TransportFilter = ({ navigation, route }) => {
                     temporaryFilter={'Araç seçiniz'}
                     currentFilter={state.vehicle.value?.slice(1, state.vehicle.value.length - 1)}
                     icon={Icons.search}
-                    command={() => navigation.navigate('FilterDatas', { type: 'vehicle' })}
-                    deleteCommand={() => dispatch({ type: 'vehicle', data: undefined })}
+                    command={() => navigation.navigate('FilterDatas', { type: 'declarationNumber', commandData: GetVehicleNames(), backPage: 'TransportFilter' })}
+                    deleteCommand={() => dispatch({ type: 'declarationNumber', data: undefined })}
                 />
                 <NewFilterLine
                     width={300}
@@ -127,8 +124,8 @@ const TransportFilter = ({ navigation, route }) => {
                     temporaryFilter={'Firma seçiniz'}
                     currentFilter={state.company.value?.slice(1, state.company.value.length - 1)}
                     icon={Icons.search}
-                    command={() => navigation.navigate('FilterDatas', { type: 'company' })}
-                    deleteCommand={() => dispatch({ type: 'company', data: undefined })}
+                    command={() => navigation.navigate('FilterDatas', { type: 'SenderName', commandData: GetSenderNames(), backPage: 'TransportFilter' })}
+                    deleteCommand={() => dispatch({ type: 'SenderName', data: undefined })}
                 />
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}

@@ -1,73 +1,62 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { User } from "../../components/Constants";
+import { GetSenderNames, GetVehicleNames } from "../../components/ApiFunctions";
+import { ThemeColors, User } from "../../components/Constants";
 import SearchBar from "../../components/SearchBar";
+import { LoadingScreen } from "../../components/ShortComponents";
 
-var allDatas = [];
+const datas = {
+    data: null,
+    constData: null
+}
+
+function Reducer(state, action) {
+    try {
+        switch (action.type) {
+            case 'first':
+                return { data: action.data, constData: action.data }
+            case 'search':
+                return { ...state, data: action.data }
+            case 'reset':
+                return { ...state, data: state.constData }
+        }
+    } catch (err) {
+        console.log("HATAAAAAA")
+        return state
+    }
+}
 
 const FilterDatas = ({ navigation, route }) => {
 
-    const { type, commandCallBack } = route.params;
-    const [datas, setDatas] = useState();
+    const { type, commandData, backPage } = route.params;
 
+    const [state, dispatch] = useReducer(Reducer, datas);
 
-    const GetSenderNames = async () => {
-        allDatas = await fetch('http://193.53.103.178:5312/api/odata/TransportCards?$apply=groupby((SenderName))',
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + User.token,
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(res => res.value)
-        setDatas(allDatas)
-    }
-
-    const GetVehicleNames = async () => {
-        allDatas = await fetch('http://193.53.103.178:5312/api/odata/TransportWaybills?$select=declarationNumber&$orderby=declarationNumber',
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + User.token,
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(res => res.value)
-        setDatas(allDatas)
-    }
-
-    useMemo(() => {
-        if (type == 'company') {
-            GetSenderNames();
-        }
-        else if (type == 'vehicle') {
-            GetVehicleNames();
-        }
+    useMemo(async () => {
+        const data = await commandData
+        dispatch({ type: 'first', data: data })
     }, [])
 
+
     return (
-        <View style={{ backgroundColor: 'white' }}>
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
             {
-                allDatas ? (
+                state.constData ? (
                     <View style={{ justifyContent: 'space-between', height: '100%' }}>
                         <SearchBar
                             holderText={'Firma seçiniz...'}
                             commCallBack={(value) => {
-                                setDatas(allDatas.filter(function (e) {
-                                    if (e.SenderName)
-                                        return e.SenderName.toLowerCase().indexOf(value?.toLowerCase()) >= 0
-                                    else if (e.declarationNumber)
-                                        return e.declarationNumber.toLowerCase().indexOf(value?.toLowerCase()) >= 0
-                                }
-                                ))
+                                dispatch({
+                                    type: 'search',
+                                    data: state.constData.filter(function (e) {
+                                        return e[type].toLowerCase().indexOf(value?.toLowerCase()) >= 0
+                                    })
+                                })
                             }}
-                            resetCallBack={() => setDatas(allDatas)}
+                            resetCallBack={() => dispatch({type: 'reset'})}
                         />
                         <FlatList
-                            data={datas}
+                            data={state.data}
                             key={(index) => index}
                             onEndReachedThreshold={.5}
                             renderItem={({ item }) => (
@@ -79,7 +68,7 @@ const FilterDatas = ({ navigation, route }) => {
                                         justifyContent: 'center',
                                         paddingLeft: 10
                                     }}
-                                    onPress={() => [navigation.navigate('TransportFilter', item.SenderName ? { company: item?.SenderName } : { vehicle: item.declarationNumber })]}
+                                    onPress={() => [navigation.navigate(backPage, { type: type, data: item[type] })]}
                                 >
                                     <Text style={{ fontSize: 17, color: '#343a40', fontWeight: '400' }}>{item.SenderName || item.declarationNumber}</Text>
                                 </TouchableOpacity>
@@ -87,7 +76,7 @@ const FilterDatas = ({ navigation, route }) => {
                         />
                     </View>
                 ) : (
-                    <View></View>
+                    <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />
                 )
             }
         </View>

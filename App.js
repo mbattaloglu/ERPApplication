@@ -77,6 +77,18 @@ const DirectivesScreen = ({ navigation }) => {
           headerTitleAlign: 'center',
         }}
       />
+      <DirectivesStack.Screen
+        name="FilterDatas"
+        component={FilterDatas}
+        options={{
+          title: 'Talimatlarım',
+          headerStyle: {
+            backgroundColor: ThemeColors.directives.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
     </DirectivesStack.Navigator >
   )
 }

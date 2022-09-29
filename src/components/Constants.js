@@ -13,6 +13,7 @@ import CancelIcon from "../images/icons/cancel.png"
 import PhoneIcon from "../images/icons/phone.png"
 import ArrowIcon from "../images/icons/arrow.png"
 import PlusIcon from "../images/icons/plus.png"
+import KeyboardIcon from "../images/icons/keyboard.png"
 
 //#region OutLine
 import HomeIcon_OutLine from "../images/icons/OutLine/home.png"
@@ -71,6 +72,7 @@ const Icons = {
     phone: PhoneIcon,
     arrow: ArrowIcon,
     plus: PlusIcon,
+    keyboard: KeyboardIcon,
     outLine: {
         home: HomeIcon_OutLine,
         transports: TransportsIcon_OutLine,
