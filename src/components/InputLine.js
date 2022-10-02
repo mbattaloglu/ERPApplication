@@ -5,17 +5,21 @@ import { Icons } from "../components/Constants";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { EditDate } from "../components/MyFunctions";
 
-const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, currValue, changeData = () => { } }) => {
+const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, currValue, changeData = () => { }, deleteData = () => { } }) => {
     const [value, setValue] = useState();
     const focus = React.useRef();
     var icon;
 
-    changeData(value);
+    if (value)
+        changeData(value)
+
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     useEffect(() => {
-        if (currValue)
+        if (currValue) {
             setValue(currValue)
+            console.log("Değişti: ", currValue)
+        }
     }, [currValue])
 
     switch (type) {
@@ -38,18 +42,22 @@ const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, 
         setValue(date);
     };
 
+    function deleteValue() {
+        setValue('')
+        deleteData()
+    }
+
     return (
         <View style={{
             flexDirection: 'row',
             backgroundColor: 'white',
             flex: .08,
-            marginHorizontal: '5%',
             borderRadius: 5,
             elevation: 3,
             marginBottom: '2%'
         }}>
             <View style={{
-                flex: 3,
+                flex: 4,
                 justifyContent: 'space-between',
                 flexDirection: 'row',
                 alignItems: 'center'
@@ -60,23 +68,23 @@ const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, 
             {
                 type == 'Seç' || type == 'Tarih' ? (
                     <TouchableOpacity
-                        style={{ flex: 4, justifyContent: 'center' }}
+                        style={{ flex: 3, justifyContent: 'center' }}
                         onPress={command}
                     >
                         {
                             value ? (
-                                <Text style={[styles.value, { color: 'black' }]}>{type == 'Tarih' ? EditDate(value) : value}</Text>
+                                <Text style={[styles.value, { color: '#3a5a40' }]} numberOfLines={1}>{type == 'Tarih' ? EditDate(value) : value}</Text>
                             ) : (
-                                <Text style={[styles.value, { textDecorationLine: 'underline' }]}>{tempValue}</Text>
+                                <Text style={[styles.value, { textDecorationLine: 'underline' }]} numberOfLines={1}>{tempValue}</Text>
                             )
                         }
                     </TouchableOpacity>
                 ) : type == 'Metin' && (
-                    <View style={{ flex: 4, justifyContent: 'center' }}>
+                    <View style={{ flex: 3, justifyContent: 'center' }}>
                         <TextInput
                             ref={focus}
                             keyboardType={keyboardType}
-                            style={[styles.value, { color: 'black' }]}
+                            style={[styles.value, { color: '#3a5a40' }]}
                             placeholderTextColor={'darkgray'}
                             placeholder={tempValue}
                             onChangeText={(value) => setValue(value)}
@@ -86,7 +94,7 @@ const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, 
             }
             <TouchableOpacity
                 style={{ aspectRatio: 1, alignItems: 'center', justifyContent: 'center' }}
-                onPress={value ? () => setValue('') : command}
+                onPress={value ? () => deleteValue() : command}
             >
                 {
                     value ? (
@@ -112,7 +120,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 14,
         color: 'black',
-        fontWeight: '400',
         paddingHorizontal: '10%'
     },
     value: {

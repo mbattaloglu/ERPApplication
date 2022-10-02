@@ -141,4 +141,17 @@ function EditPhoneNumber(number = '') {
     }
 }
 
-export { SortingCustomer, EditDate, Reducer, OdataFilterFormat, unEditDate, fuseFilter, filterFormat, fuseFilterDirective };
+function GetToday() {
+    try {
+        var today = new Date()
+        today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+        today = JSON.stringify(today)
+        today = today.slice(1, today.length - 1)
+        return today
+    } catch (err) {
+        console.log(`Hata: ${err}. Konum: GetToday()/catch()`)
+        return null
+    }
+}
+
+export { SortingCustomer, EditDate, Reducer, OdataFilterFormat, unEditDate, fuseFilter, filterFormat, fuseFilterDirective, GetToday };

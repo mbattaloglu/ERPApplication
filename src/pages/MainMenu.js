@@ -52,8 +52,8 @@ const MainMenu = ({ navigation }) => {
     let userInfo = await GetUserInfo()
     let image = await GetImage()
     dispatch({ datas: [chartData.Debit, -chartData.Credit, chartData.Amount], userInfo: userInfo, image: image })
-    User.id = state.userInfo.Oid;
-    User.defaultCurrencyType = state.userInfo?.DefaultCurrencyType?.Name;
+    User.id = userInfo.Oid;
+    User.defaultCurrencyType = userInfo?.DefaultCurrencyType?.Name;
   }
 
   useEffect(() => { //Performans: 2 kez çekiyor.

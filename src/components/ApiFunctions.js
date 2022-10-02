@@ -215,4 +215,84 @@ async function GetVehicleNames() {
         return []
     }
 };
-export { GetList, GetTotals, GetTransportListsDetails, GetUserInfo, GetImage, GetSenderNames, GetVehicleNames }
+
+async function PostPaymentDirective({ desc, amount, date, packing, check }) {
+    try {
+        const data = fetch
+            (
+                (
+                    Api.link +
+                    '/odata/TransportPaymentDirectives/' + User.id + '/PostCustomerTransportPaymentDirective'
+                ),
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + User.token,
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Desc: desc,
+                        Amount: amount || 0,
+                        Date: date,
+                        PackingQuantity: packing || 0,
+                        TransportCheckDetailOid: check || 0
+                    }),
+                },
+            )
+            .then(res => res.json())
+            .then(res => res.value)
+            .catch(error => {
+                console.log(`HATA: ${error}. Konum: PostPaymentDirective()/fetch()/catch()`)
+                return 'İşlem başarısız!'
+            });
+        return data
+    } catch (err) {
+        console.log(`HATA: ${err}. Konum: PostPaymentDirective()/catch()`)
+        return 'İşlem başarısız!'
+    }
+}
+
+async function PostUploadImage({ oid, image }) {
+    try {
+        const data = fetch
+            (
+                (
+                    Api.link +
+                    '/odata/TransportPaymentDirectives/' + oid + '/UploadFile'
+                ),
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + User.token,
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        FileName: "",
+                        Description: "",
+                        Data: image
+                    }),
+                },
+            )
+            .then(res => res.json())
+            .then(res => res.value)
+            .catch(error => {
+                console.log(`HATA: ${error}. Konum: PostUploadImage()/fetch()/catch()`)
+                return 'İşlem başarısız!'
+            });
+        return data
+    } catch (err) {
+        console.log(`HATA: ${err}. Konum: PostUploadImage()/catch()`)
+        return 'İşlem başarısız!'
+    }
+}
+export {
+    GetList,
+    GetTotals,
+    GetTransportListsDetails,
+    GetUserInfo,
+    GetImage,
+    GetSenderNames,
+    GetVehicleNames,
+    PostPaymentDirective,
+    PostUploadImage
+}

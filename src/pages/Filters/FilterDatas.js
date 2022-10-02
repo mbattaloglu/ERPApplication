@@ -28,7 +28,7 @@ function Reducer(state, action) {
 
 const FilterDatas = ({ navigation, route }) => {
 
-    const { type, commandData, backPage } = route.params;
+    const { type, commandData, backPage, color } = route.params;
 
     const [state, dispatch] = useReducer(Reducer, datas);
 
@@ -68,7 +68,7 @@ const FilterDatas = ({ navigation, route }) => {
                                         justifyContent: 'center',
                                         paddingLeft: 10
                                     }}
-                                    onPress={() => [navigation.navigate(backPage, { type: type, data: item[type] })]}
+                                    onPress={() => [navigation.navigate(backPage, { type: type, data: item[type], [type]: item[type] })]}
                                 >
                                     <Text style={{ fontSize: 17, color: '#343a40', fontWeight: '400' }}>{item.SenderName || item.declarationNumber}</Text>
                                 </TouchableOpacity>
@@ -76,7 +76,7 @@ const FilterDatas = ({ navigation, route }) => {
                         />
                     </View>
                 ) : (
-                    <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />
+                    <LoadingScreen color={color} />
                 )
             }
         </View>

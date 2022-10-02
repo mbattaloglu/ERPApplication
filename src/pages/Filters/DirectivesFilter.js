@@ -22,7 +22,7 @@ const DirectivesFilter = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: '7%' }}>
 
             <View style={{ marginBottom: '10%' }} />
 

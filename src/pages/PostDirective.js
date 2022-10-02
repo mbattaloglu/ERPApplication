@@ -1,103 +1,160 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { GetVehicleNames } from "../components/ApiFunctions";
+import React, { useEffect } from "react";
+import { Alert, Button, View } from "react-native";
+import { GetUserInfo, GetVehicleNames, PostPaymentDirective } from "../components/ApiFunctions";
+import BasicBox from "../components/BasicBox";
+import { Api, ThemeColors, User } from "../components/Constants";
 
 import InputLine from "../components/InputLine";
+import { EditDate, GetToday } from "../components/MyFunctions";
+import { LoadingScreen } from "../components/ShortComponents";
+
+const listDatas = {
+    code: {
+        title: 'Cari Kodu',
+        value: '',
+    },
+    currency: {
+        title: 'Döviz Tipi',
+        value: '',
+    },
+    company: {
+        title: 'Firma',
+        value: '',
+    },
+    date: {
+        title: 'Evrak Tarihi',
+        value: '',
+    },
+}
+
+function Reducer(state, action) {
+    try {
+        return {
+            code: { ...state.code, value: action.data.Code },
+            currency: { ...state.currency, value: action.data.DefaultCurrencyType.Name },
+            company: { ...state.company, value: action.data.Name },
+            date: { ...state.date, value: EditDate(GetToday()?.slice(0, 10)) }
+        }
+    } catch (err) {
+        console.log(`Hata: ${err}. Konum: Reducer/catch()`)
+        return state
+    }
+}
 
 const PostDirective = ({ navigation, route }) => {
 
+    const [state, dispatch] = React.useReducer(Reducer, listDatas)
+
     const data = {
-        aciklama: '',
-        ambalaj: '',
-        tutar: '',
-        cek: route.params?.data,
-        tarih: ''
+        desc: '',
+        packing: '',
+        amount: '',
+        check: '',
     }
 
-    function SayToMe() {
-        console.log(data)
+    async function GetOtherDatas() {
+        const datas = await GetUserInfo()
+        dispatch({ data: datas })
+    }
+
+    useEffect(() => {
+        console.log("1 kereye mahsus.")
+        GetOtherDatas()
+    }, [])
+
+    async function CreateNew() {
+        const message = await PostPaymentDirective(
+            {
+                desc: data.desc,
+                packing: data.packing,
+                amount: parseFloat(data.amount),
+                check: data.check,
+                date: new Date(),
+            }
+        )
+        console.log(message)
+        Alert.alert(
+            "Talimat",
+            message,
+            [
+                {
+                    text: "Tamam",
+                }
+            ]
+        )
+
+    }
+
+    function AreYouSure() {
+        Alert.alert(
+            "Onaylıyor musun?",
+            "Talimat oluşturmak üzeresiniz.",
+            [
+                {
+                    text: "İptal",
+                    onPress: () => { },
+                    style: "cancel"
+                },
+                {
+                    text: "Devam",
+                    onPress: () => CreateNew()
+                }
+            ]
+        );
     }
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ marginBottom: '5%' }} />
-            <View style={{ marginHorizontal: '5%', borderRadius: 5, elevation: 3, marginBottom: '5%', backgroundColor: 'white', flex: .25 }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', flex: .38 }}>
-                        <Text style={{ paddingHorizontal: '10%', flex: 1 }} numberOfLines={1}>Cari Kodu</Text>
-                        <Text>:</Text>
-                    </View>
-                    <View style={{ flex: .62, justifyContent: 'center' }}>
-                        <Text style={{ textAlign: 'right', paddingHorizontal: '5%' }}>BS-10</Text>
-                    </View>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', flex: .38 }}>
-                        <Text style={{ paddingHorizontal: '10%', flex: 1 }} numberOfLines={1}>Döviz Tipi</Text>
-                        <Text>:</Text>
-                    </View>
-                    <View style={{ flex: .62, justifyContent: 'center' }}>
-                        <Text style={{ textAlign: 'right', paddingHorizontal: '5%' }}>USD</Text>
-                    </View>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', flex: .38 }}>
-                        <Text style={{ paddingHorizontal: '10%', flex: 1 }} numberOfLines={1}>Firma</Text>
-                        <Text>:</Text>
-                    </View>
-                    <View style={{ flex: .62, justifyContent: 'center' }}>
-                        <Text style={{ textAlign: 'right', paddingHorizontal: '5%' }}>HUSAM ABDULHAMID</Text>
-                    </View>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', flex: .38 }}>
-                        <Text style={{ paddingHorizontal: '10%', flex: 1 }} numberOfLines={1}>Evrak Tarihi</Text>
-                        <Text>:</Text>
-                    </View>
-                    <View style={{ flex: .62, justifyContent: 'center' }}>
-                        <Text style={{ textAlign: 'right', paddingHorizontal: '5%' }}>02.06.2022</Text>
-                    </View>
-                </View>
-            </View>
+        <>
+            {
+                state.date.value ? (
+                    <View style={{ flex: 1, paddingHorizontal: '5%' }}>
+                        <View style={{ marginBottom: '5%' }} />
 
-            <InputLine
-                title={'Açıklama'}
-                tempValue={'Açıklama giriniz'}
-                type={'Metin'}
-                changeData={(value) => data.aciklama = value}
-            />
+                        <BasicBox
+                            listDatas={state}
+                        />
 
-            <InputLine
-                title={'Ambalaj Miktarı'}
-                tempValue={'Miktar giriniz'}
-                type={'Metin'}
-                changeData={(value) => data.ambalaj = value}
-                keyboardType="number-pad"
-            />
+                        <InputLine
+                            title={'Açıklama'}
+                            tempValue={'Açıklama giriniz'}
+                            type={'Metin'}
+                            changeData={(value) => data.desc = value}
+                        />
 
-            <InputLine
-                title={'Tutar'}
-                tempValue={'Tutar giriniz'}
-                type={'Metin'}
-                changeData={(value) => data.tutar = value}
-                keyboardType="number-pad"
-            />
+                        <InputLine
+                            title={'Ambalaj Miktarı'}
+                            tempValue={'Miktar giriniz'}
+                            type={'Metin'}
+                            changeData={(value) => data.packing = value}
+                            keyboardType="number-pad"
+                        />
 
-            <InputLine
-                title={'Çek No'}
-                tempValue={'Çek seçiniz'}
-                type={'Seç'}
-                currValue={route.params?.data}
-                command={() => navigation.navigate('FilterDatas', { type: 'declarationNumber', commandData: GetVehicleNames(), backPage: 'PostDirective' })}
-            />
+                        <InputLine
+                            title={'Tutar'}
+                            tempValue={'Tutar giriniz'}
+                            type={'Metin'}
+                            changeData={(value) => data.amount = value}
+                            keyboardType="number-pad"
+                        />
 
-            {/* <InputLine
-                title={'Tarih'}
-                tempValue={'Tarih seçiniz'}
-                type={'Tarih'}
-                changeData={(value) => data.tarih = value}
-            /> */}
-        </View>
+                        <InputLine
+                            title={'Çek No'}
+                            tempValue={'Çek seçiniz'}
+                            type={'Seç'}
+                            currValue={route.params?.data}
+                            changeData={(value) => data.check = value}
+                            deleteData={() => navigation.setParams({ data: null })}
+                            command={() => navigation.navigate('FilterDatas', { type: 'declarationNumber', commandData: GetVehicleNames(), backPage: 'PostDirective', color: ThemeColors.directives.SubHeaderBar })}
+                        />
+
+                        <Button title="Olustur" onPress={() => AreYouSure()} />
+                    </View>
+                ) : (
+                    <LoadingScreen />
+                )
+            }
+        </>
+
     )
 }
 

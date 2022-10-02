@@ -9,7 +9,9 @@ import { DataScreen } from "../components/NewConst";
 import { EditDate, Reducer } from "../components/MyFunctions";
 import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
 
-import { GetList, GetTotals } from "../components/ApiFunctions";
+import { GetList, GetTotals, PostUploadImage } from "../components/ApiFunctions";
+
+import ImagePicker from 'react-native-image-crop-picker';
 
 var skip = 0;
 var top = 15;
@@ -130,6 +132,31 @@ const Directives = ({ navigation, route }) => {
         height: 153,
     }
 
+    function TakeAPhoto(oid) {
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: true,
+            compressImageQuality: .8
+        }).then(image => {
+            UploadImage({ oid: oid, data: image.data })
+        });
+    }
+
+    async function UploadImage({ oid, data }) {
+        const message = await PostUploadImage({ oid: oid, image: data })
+        Alert.alert(
+            "Talimat",
+            message,
+            [
+                {
+                    text: "Tamam",
+                }
+            ]
+        )
+    }
+
     return (
         <View style={{ justifyContent: 'space-between', flex: 1, backgroundColor: 'white' }}>
             {
@@ -144,7 +171,7 @@ const Directives = ({ navigation, route }) => {
                             feetComp={!state.noData &&
                                 <LoadingScreen color={ThemeColors.directives.SubHeaderBar} />}
                             canClick //TODO: Destroy this
-                            command={() => {
+                            command={(oid) => {
                                 Alert.alert(
                                     "Emin misin?",
                                     "Bu talimata bir resim yüklemek üzeresiniz.",
@@ -154,7 +181,7 @@ const Directives = ({ navigation, route }) => {
                                             onPress: () => { },
                                             style: "cancel"
                                         },
-                                        { text: "Devam", onPress: () => { } }
+                                        { text: "Devam", onPress: () => TakeAPhoto(oid) }
                                     ]
                                 );
                             }}
@@ -208,6 +235,9 @@ function EditDatas(datas) {
                     },
                     { // Durum
                         title: temp.TPDPaymentStatus == 'Paid' ? 'Onaylı' : 'Onaysız'
+                    },
+                    { // Oid
+                        oid: temp.Oid
                     },
                 ]
             ]

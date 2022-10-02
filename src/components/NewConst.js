@@ -98,7 +98,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
         <View style={[StylesAll.profileCard, { backgroundColor: lineColor }]}>
             <TouchableOpacity
                 disabled={!canClick}
-                onPress={() => command(items[0][1].title)}
+                onPress={() => command(items[0][6].oid)}
             >
                 <View
                     style={{
@@ -132,7 +132,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
                     <View style={{ flex: 3.5 }}>
                         {
                             items[0].map((item, index) => {
-                                if (index == 0)
+                                if (index == 0 || index == 6)
                                     return;
                                 return (
                                     <View
