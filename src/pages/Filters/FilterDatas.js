@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useMemo, useReducer } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { GetSenderNames, GetVehicleNames } from "../../components/ApiFunctions";
-import { ThemeColors, User } from "../../components/Constants";
 import SearchBar from "../../components/SearchBar";
 import { LoadingScreen } from "../../components/ShortComponents";
 

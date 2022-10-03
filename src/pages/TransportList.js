@@ -2,7 +2,7 @@ import React, { useState, useMemo, useReducer } from "react";
 import { View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
 
-import { DataScreen } from "../components/NewConst";
+import { DataScreen, OpenScreen } from "../components/NewConst";
 
 import { EditDate, Reducer } from "../components/MyFunctions";
 import { GetList, GetTotals } from "../components/ApiFunctions";
@@ -134,7 +134,6 @@ const TransportList = ({ navigation, route }) => {
                             canClick //TODO: Destroy this
                             command={(oid) => navigation.navigate('TransportDetails', { oid })}
                             titles={titles}
-                            color={'transportList'}
                         />
                     </View>
                 ) : (
@@ -149,7 +148,16 @@ const TransportList = ({ navigation, route }) => {
                     </>
                 )
             }
-
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    marginHorizontal: '7%',
+                    alignSelf: 'center',
+                }}>
+                <OpenScreen items={[state.totals, state.listDetails]} color={"transportList"} />
+            </View>
         </View>
     )
 }

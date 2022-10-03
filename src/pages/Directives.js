@@ -1,12 +1,11 @@
 import React, { useMemo, useState, useReducer } from "react";
 import { Alert, View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
-import { toAmount } from "../components/ConstFunctions";
 
-import { DataScreen } from "../components/NewConst";
+import { AddButon, DataScreen, OpenScreen } from "../components/NewConst";
 
 
-import { EditDate, Reducer } from "../components/MyFunctions";
+import { EditDate, Reducer, toAmount } from "../components/MyFunctions";
 import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
 
 import { GetList, GetTotals, PostUploadImage } from "../components/ApiFunctions";
@@ -132,8 +131,20 @@ const Directives = ({ navigation, route }) => {
         height: 153,
     }
 
-    function TakeAPhoto(oid) {
+    function ImageWithCamera(oid) {
         ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: true,
+            compressImageQuality: .8
+        }).then(image => {
+            UploadImage({ oid: oid, data: image.data })
+        });
+    }
+
+    function ImageFromGallery(oid) {
+        ImagePicker.openPicker({
             width: 300,
             height: 400,
             cropping: true,
@@ -163,7 +174,6 @@ const Directives = ({ navigation, route }) => {
                 state.lists.length > 0 && !loading ? (
                     <View style={{ flex: 1 }}>
                         <DataScreen
-                            type={'Directives'}
                             items={state}
                             itemStyles={itemStyles}
                             boxStyles={boxStyles}
@@ -173,21 +183,26 @@ const Directives = ({ navigation, route }) => {
                             canClick //TODO: Destroy this
                             command={(oid) => {
                                 Alert.alert(
-                                    "Emin misin?",
-                                    "Bu talimata bir resim yüklemek üzeresiniz.",
+                                    "Talimat",
+                                    "Nereden resim yüklemek istiyorsunuz?",
                                     [
                                         {
                                             text: "İptal",
                                             onPress: () => { },
                                             style: "cancel"
                                         },
-                                        { text: "Devam", onPress: () => TakeAPhoto(oid) }
+                                        {
+                                            text: "Galeri",
+                                            onPress: () => ImageFromGallery(oid)
+                                        },
+                                        {
+                                            text: "Kamera",
+                                            onPress: () => ImageWithCamera(oid)
+                                        },
                                     ]
                                 );
                             }}
                             titles={titles}
-                            color={'directives'}
-                            addCommand={() => navigation.navigate("PostDirective")}
                         />
                     </View>
                 ) : (
@@ -202,6 +217,19 @@ const Directives = ({ navigation, route }) => {
                     </>
                 )
             }
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    marginHorizontal: '7%',
+                    alignSelf: 'center',
+                }}>
+                {
+                    <AddButon addCommand={() => navigation.navigate("PostDirective")} />
+                }
+                <OpenScreen items={[state.totals, state.listDetails]} color={"directives"} />
+            </View>
         </View>
     )
 }

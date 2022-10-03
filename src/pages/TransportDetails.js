@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList } from "react-native";
+import React, { useEffect, useReducer, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { TotalScreen } from "../components/NewConst";
-import { ThemeColors, Icons, Api, User, StylesAll } from "../components/Constants";
-import { toAmount } from "../components/ConstFunctions";
+import { ThemeColors, StylesAll } from "../components/Constants";
 import { LoadingScreen } from "../components/ShortComponents";
 import { GetTransportListsDetails } from "../components/ApiFunctions";
 

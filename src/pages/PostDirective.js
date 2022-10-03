@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Alert, Button, View } from "react-native";
+import { Alert, View } from "react-native";
 import { GetUserInfo, GetVehicleNames, PostPaymentDirective } from "../components/ApiFunctions";
 import BasicBox from "../components/BasicBox";
-import { Api, ThemeColors, User } from "../components/Constants";
+import { ThemeColors } from "../components/Constants";
+import CustomButton from "../components/CustomButton";
 
 import InputLine from "../components/InputLine";
 import { EditDate, GetToday } from "../components/MyFunctions";
@@ -147,7 +148,16 @@ const PostDirective = ({ navigation, route }) => {
                             command={() => navigation.navigate('FilterDatas', { type: 'declarationNumber', commandData: GetVehicleNames(), backPage: 'PostDirective', color: ThemeColors.directives.SubHeaderBar })}
                         />
 
-                        <Button title="Olustur" onPress={() => AreYouSure()} />
+                        <CustomButton
+                            title={'Olustur'}
+                            boxStyle={{
+                                marginTop: '3%',
+                                backgroundColor: '#6b9080',
+                                alignSelf: 'flex-end',
+                                paddingHorizontal: '8%'
+                            }}
+                            onClickHandler={() => AreYouSure()}
+                        />
                     </View>
                 ) : (
                     <LoadingScreen />

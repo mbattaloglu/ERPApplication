@@ -5,14 +5,12 @@ import { Icons, StylesAll, ThemeColors } from "./Constants";
 const BORDER_COLOR = 'darkgray';
 
 const HEIGHT = Dimensions.get('window').height;
-const touchLine = HEIGHT * 1.5 / 35
 const totalBox = HEIGHT * 8.5 / 35
 
-const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp, color, type, addCommand }) => {
+const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp }) => {
     return (
         <View style={{ flex: 1 }}>
             <FlatList
-                style={{ marginBottom: touchLine }}
                 showsVerticalScrollIndicator={false}
                 data={items.lists}
                 onEndReached={() => onEnd()}
@@ -35,7 +33,7 @@ const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxSt
                     )
                 }}
             />
-            <View
+            {/* <View
                 style={{
                     position: 'absolute',
                     width: '100%',
@@ -47,7 +45,7 @@ const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxSt
                     type == 'Directives' && <AddButon addCommand={addCommand} />
                 }
                 <OpenScreen items={[items.totals, items.listDetails]} color={color} />
-            </View>
+            </View> */}
 
         </View>
     )
@@ -279,4 +277,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export { DataScreen, TotalScreen, EditDatas };
+export { DataScreen, TotalScreen, EditDatas, AddButon, OpenScreen };

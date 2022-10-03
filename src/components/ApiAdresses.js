@@ -1,5 +1,4 @@
 import { Api } from "../components/Constants";
-import { filterFormat } from "./MyFunctions";
 
 function Lists(address, skip, top, filter) {
     try {

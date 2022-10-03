@@ -1,11 +1,10 @@
 import React, { useMemo, useState, useReducer } from "react";
 import { View } from "react-native";
 import { ThemeColors } from "../components/Constants";
-import { toAmount } from "../components/ConstFunctions";
 
-import { DataScreen } from "../components/NewConst";
+import { DataScreen, OpenScreen } from "../components/NewConst";
 
-import { EditDate, Reducer } from "../components/MyFunctions";
+import { EditDate, Reducer, toAmount } from "../components/MyFunctions";
 import { GetList, GetTotals } from "../components/ApiFunctions";
 
 import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
@@ -134,7 +133,6 @@ const CustomerSuppliers = ({ navigation, route }) => {
                             //canClick //TODO: Destroy this
                             //command={(oid) => navigation.navigate('TransportDetails', { oid })}
                             titles={titles}
-                            color={'customerSuppliers'}
                         />
                     </View>
                 ) : (
@@ -149,6 +147,16 @@ const CustomerSuppliers = ({ navigation, route }) => {
                     </>
                 )
             }
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    marginHorizontal: '7%',
+                    alignSelf: 'center',
+                }}>
+                <OpenScreen items={[state.totals, state.listDetails]} color={"customerSuppliers"} />
+            </View>
         </View>
     )
 }
