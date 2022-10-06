@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AuthContext } from '../../Context';
+import { GetToken } from '../components/ApiFunctions';
 import { Api } from '../components/Constants';
 
 const Login = ({ tab }) => {
@@ -10,21 +12,15 @@ const Login = ({ tab }) => {
 
   React.useEffect(() => {
     const loginHandler = async () => {
-      const token = await fetch(
-        Api.link + "/Authentication",
+      const token = await GetToken(
         {
-          method: 'POST',
-          headers: { 'Content-type': 'application/json' },
-          body: JSON.stringify({
-            username: 'osmanportal',
-            password: '123',
-          }),
-        },
+          api: await AsyncStorage.getItem("api"),
+          username: await AsyncStorage.getItem("username"),
+          password: await AsyncStorage.getItem("password")
+        }
       )
-        .then(res => res.json())
-        .then(res => res.token)
-        .catch(error => console.log(error));
       if (token) {
+        Api.link = await AsyncStorage.getItem("api");
         signIn({ token });
         setLoading(false);
       } else {

@@ -8,7 +8,7 @@ function Lists(address, skip, top, filter) {
             case 'TransportCards':
                 return (
                     Api.link +
-                    '/odata/TransportCards' +
+                    '/api/odata/TransportCards' +
                     '?$select=Oid,SenderName,DocumentDate,TotalPackingQuantity' +
                     '&$expand=TransportWaybill($select=declarationNumber)' +
                     filter +
@@ -20,7 +20,7 @@ function Lists(address, skip, top, filter) {
                 filter = filter.replace(',', ' and ').replace('startTime', 'Date').replace('endTime', 'Date')
                 return (
                     Api.link +
-                    '/odata/TransportPaymentDirectives' +
+                    '/api/odata/TransportPaymentDirectives' +
                     '?$orderby=Date' +
                     '&$expand=CurrencyType($select=Name)' +
                     filter +
@@ -31,7 +31,7 @@ function Lists(address, skip, top, filter) {
             case 'FinancialTrxes':
                 return (
                     Api.link +
-                    '/odata/FinancialTrxes' +
+                    '/api/odata/FinancialTrxes' +
                     '?$expand=CustomerSupplier(' +
                     (
                         '$expand=DefaultCurrencyType($select=Name);' +
@@ -63,7 +63,7 @@ function Totals(address, filter) {
                     filter = `filter(${filter})/`
                 return (
                     Api.link +
-                    '/odata/TransportCards' +
+                    '/api/odata/TransportCards' +
                     '?$apply=' +
                     (
                         filter +
@@ -83,14 +83,14 @@ function Totals(address, filter) {
                 console.log("merhaba: ", filter)
                 return (
                     Api.link +
-                    '/odata/TransportPaymentDirectives/TotalAmountByStatuses(' + filter + ')'
+                    '/api/odata/TransportPaymentDirectives/TotalAmountByStatuses(' + filter + ')'
                 )
             case 'FinancialTrxes':
                 if (filter)
                     filter = `filter(${filter})/`
                 return (
                     Api.link +
-                    '/odata/FinancialTrxes' +
+                    '/api/odata/FinancialTrxes' +
                     '?$apply=' +
                     (
                         filter +

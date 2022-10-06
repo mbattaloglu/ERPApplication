@@ -8,9 +8,8 @@ const InputField = ({title, safeTextEntry = false, onChangeHandler, value=""}) =
       <TextInput
         style={styles.inputArea}
         secureTextEntry={safeTextEntry}
-        onChangeText={onChangeHandler}
-        value={value}
-      />
+        onChangeText={(value) => onChangeHandler(value)}
+      >{value}</TextInput>
     </View>
   );
 };

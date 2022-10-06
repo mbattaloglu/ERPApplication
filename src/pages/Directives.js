@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useReducer } from "react";
-import { Alert, View } from "react-native";
+import { Alert, Dimensions, View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
 
 import { AddButon, DataScreen, OpenScreen } from "../components/NewConst";
@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 var skip = 0;
 var top = 15;
 const type = 'TransportPaymentDirectives';
+const HEIGHT = Dimensions.get('window').height;
 
 const datas = {
     lists: [],
@@ -47,6 +48,7 @@ const Directives = ({ navigation, route }) => {
 
     //Tüm verileri tutuyor: 'lists, totals, noData'
     const [state, dispatch] = useReducer(Reducer, datas);
+    const [adding, setAdding] = useState(false);
 
     useMemo(() => {
         GetAll(route.params?.filters);
@@ -179,7 +181,8 @@ const Directives = ({ navigation, route }) => {
                             boxStyles={boxStyles}
                             onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
                             feetComp={!state.noData &&
-                                <LoadingScreen color={ThemeColors.directives.SubHeaderBar} />}
+                                <LoadingScreen color={ThemeColors.directives.SubHeaderBar} />
+                            }
                             canClick //TODO: Destroy this
                             command={(oid) => {
                                 Alert.alert(

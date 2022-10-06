@@ -4,6 +4,7 @@ import { TotalScreen } from "../components/NewConst";
 import { ThemeColors, StylesAll } from "../components/Constants";
 import { LoadingScreen } from "../components/ShortComponents";
 import { GetTransportListsDetails } from "../components/ApiFunctions";
+import { EditDate } from "../components/MyFunctions";
 
 const datas = {
     isReady: false,
@@ -28,11 +29,13 @@ const datas = {
     middle: [
         {
             title: "Kabul Tarihi",
-            value: null
+            value: null,
+            type: 'date'
         },
         {
             title: "Sevk Tarihi",
-            value: null
+            value: null,
+            type: 'date'
         },
         {
             title: "Gönderen Şube",
@@ -81,7 +84,7 @@ function Reducer(state, action) {
     try {
         return {
             totals: state.totals.map((item, index) => { return { ...item, value: action.totals[index] } }),
-            middle: state.middle.map((item, index) => { return { ...item, value: action.middle[index] } }),
+            middle: state.middle.map((item, index) => { return { ...item, value: item?.type == 'date' ? EditDate(action.middle[index]) : action.middle[index] } }),
             transportCardDetails: { ...state.transportCardDetails, value: action.transportCardDetails },
             transportCardIncomes: { ...state.transportCardIncomes, value: action.transportCardIncomes },
             isReady: true,

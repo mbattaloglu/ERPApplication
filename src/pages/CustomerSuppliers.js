@@ -129,7 +129,8 @@ const CustomerSuppliers = ({ navigation, route }) => {
                             boxStyles={boxStyles}
                             onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
                             feetComp={!state.noData &&
-                                <LoadingScreen color={ThemeColors.customerSuppliers.SubHeaderBar} />}
+                                <LoadingScreen color={ThemeColors.customerSuppliers.SubHeaderBar} />
+                            }
                             //canClick //TODO: Destroy this
                             //command={(oid) => navigation.navigate('TransportDetails', { oid })}
                             titles={titles}

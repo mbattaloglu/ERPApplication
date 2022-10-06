@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useReducer } from "react";
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
 
 import { DataScreen, OpenScreen } from "../components/NewConst";
@@ -11,6 +11,7 @@ import { NoDataScreen, LoadingScreen } from "../components/ShortComponents";
 
 var skip = 0;
 var top = 15;
+const HEIGHT = Dimensions.get('window').height;
 
 const datas = {
     lists: [],
@@ -130,7 +131,8 @@ const TransportList = ({ navigation, route }) => {
                             boxStyles={boxStyles}
                             onEnd={() => !state.noData && GetNewDatas(route.params?.filters)}
                             feetComp={!state.noData &&
-                                <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />}
+                                <LoadingScreen color={ThemeColors.transportList.SubHeaderBar} />
+                            }
                             canClick //TODO: Destroy this
                             command={(oid) => navigation.navigate('TransportDetails', { oid })}
                             titles={titles}

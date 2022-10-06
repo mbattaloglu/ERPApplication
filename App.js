@@ -19,15 +19,60 @@ import Settings from "./src/pages/Settings";
 import TransportFilter from "./src/pages/Filters/TransportFilter";
 import FilterDatas from "./src/pages/Filters/FilterDatas";
 import PostDirective from "./src/pages/PostDirective";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //#endregion
 
+const HomeStack = createNativeStackNavigator();
 
-const optionsScreen = {
-  headerShown: true,
-  animation: 'none',
+const HomeScreen = () => {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        statusBarColor: ThemeColors.Home.HeaderBar,
+        navigationBarColor: 'white',
+        animation: 'none'
+      }}>
+      <HomeStack.Screen
+        name="Home"
+        component={MainMenu}
+        options={{
+          title: 'Ana Menü',
+          headerStyle: {
+            backgroundColor: ThemeColors.Home.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
+    </HomeStack.Navigator>
+  )
 }
 
+const SettingStack = createNativeStackNavigator();
 
+const SettingScreen = () => {
+  return (
+    <SettingStack.Navigator
+      screenOptions={{
+        statusBarColor: ThemeColors.Home.HeaderBar,
+        navigationBarColor: 'white',
+        animation: 'none'
+      }}>
+      <SettingStack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          title: 'Ayarlar',
+          headerStyle: {
+            backgroundColor: ThemeColors.Home.HeaderBar,
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+        }}
+      />
+    </SettingStack.Navigator>
+  )
+}
 const DirectivesStack = createNativeStackNavigator();
 
 const DirectivesScreen = ({ navigation }) => {
@@ -207,6 +252,24 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
 
+  //AsyncStorage.clear()
+
+  const [memory, setMemory] = useState(undefined)
+
+  useEffect(() => {
+    CheckMemory()
+  }, [])
+
+  async function CheckMemory() {
+    const data = await AsyncStorage.getItem('api');
+    if (data)
+      setMemory(true)
+    else
+      setMemory(false)
+  }
+
+  console.log("Kontrol Tamam")
+
   const [userToken, setUserToken] = useState('');
 
   const authContext = useMemo(() => {
@@ -215,108 +278,131 @@ const App = () => {
         setUserToken(token);
         User.token = token;
       },
+      memory: () => {
+        setUserToken('')
+        setMemory(true)
+      }
     };
   }, []);
 
-  return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        {userToken ? (
-          <Tab.Navigator
-            initialRouteName="MainMenu"
-            screenOptions={{
-              tabBarActiveTintColor: 'gray',
-            }}>
-            <Tab.Screen
-              name="MainMenu"
-              component={MainMenu}
-              options={{
-                title: 'Ana Menü',
-                headerStyle: {
-                  backgroundColor: ThemeColors.Home.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
-                tabBarIcon: ({ focused }) => (
-                  <Image
-                    source={focused ? Icons.fill.home : Icons.outLine.home}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
-                  />
-                )
-              }}
+  console.log("token: ", userToken)
+  console.log("hafıza: ", memory)
 
-            />
-            <Tab.Screen
-              name="TransportScreen"
-              component={TransportScreen}
-              options={{
-                title: 'Sevk Listesi',
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <Image
-                    source={focused ? Icons.fill.transports : Icons.outLine.transports}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.SubHeaderBar : 'gray' }]}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="DirectivesScreen"
-              component={DirectivesScreen}
-              options={{
-                title: 'Talimatlarım',
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <Image
-                    source={focused ? Icons.fill.directives : Icons.outLine.directives}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.SubHeaderBar : 'gray' }]}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="CustomerSuppliersScreen"
-              component={CustomerSuppliersScreen}
-              options={{
-                title: 'Hesap Ekstresi',
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <Image
-                    source={focused ? Icons.fill.suppliers : Icons.outLine.suppliers}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.SubHeaderBar : 'gray' }]}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Settings"
-              component={Settings}
-              options={{
-                title: 'Ayarlar',
-                headerStyle: {
-                  backgroundColor: ThemeColors.Home.HeaderBar,
-                },
-                headerTintColor: 'white',
-                headerTitleAlign: 'center',
-                tabBarIcon: ({ focused }) => (
-                  <Image
-                    source={focused ? Icons.fill.settings : Icons.outLine.settings}
-                    style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
-                  />
-                ),
-              }}
-            />
-          </Tab.Navigator>
-        ) : (
-          <AuthStack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}>
-            <AuthStack.Screen name="Login" component={Login} />
-          </AuthStack.Navigator>
-        )}
-      </NavigationContainer>
-    </AuthContext.Provider >
+  return (
+    <>
+      {memory != undefined &&
+        <AuthContext.Provider value={authContext}>
+          <NavigationContainer>
+            {userToken || !memory ? (
+              <Tab.Navigator
+                initialRouteName="MainMenu"
+                screenOptions={{
+                  tabBarActiveTintColor: 'gray',
+                }}>
+
+                {
+                  userToken ? (
+                    <React.Fragment>
+                      <Tab.Screen
+                        name="HomeScreen"
+                        component={HomeScreen}
+                        options={{
+                          title: 'Ana Menü',
+                          headerShown: false,
+                          tabBarIcon: ({ focused }) => (
+                            <Image
+                              source={focused ? Icons.fill.home : Icons.outLine.home}
+                              style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
+                            />
+                          )
+                        }}
+                      />
+                      <Tab.Screen
+                        name="TransportScreen"
+                        component={TransportScreen}
+                        options={{
+                          title: 'Sevk Listesi',
+                          headerShown: false,
+                          tabBarIcon: ({ focused }) => (
+                            <Image
+                              source={focused ? Icons.fill.transports : Icons.outLine.transports}
+                              style={[StylesAll.icon, { tintColor: focused ? ThemeColors.transportList.SubHeaderBar : 'gray' }]}
+                            />
+                          ),
+                        }}
+                      />
+                      <Tab.Screen
+                        name="DirectivesScreen"
+                        component={DirectivesScreen}
+                        options={{
+                          title: 'Talimatlarım',
+                          headerShown: false,
+                          tabBarIcon: ({ focused }) => (
+                            <Image
+                              source={focused ? Icons.fill.directives : Icons.outLine.directives}
+                              style={[StylesAll.icon, { tintColor: focused ? ThemeColors.directives.SubHeaderBar : 'gray' }]}
+                            />
+                          ),
+                        }}
+                      />
+                      <Tab.Screen
+                        name="CustomerSuppliersScreen"
+                        component={CustomerSuppliersScreen}
+                        options={{
+                          title: 'Hesap Ekstresi',
+                          headerShown: false,
+                          tabBarIcon: ({ focused }) => (
+                            <Image
+                              source={focused ? Icons.fill.suppliers : Icons.outLine.suppliers}
+                              style={[StylesAll.icon, { tintColor: focused ? ThemeColors.customerSuppliers.SubHeaderBar : 'gray' }]}
+                            />
+                          ),
+                        }}
+                      />
+                    </React.Fragment>
+                  ) : (
+                    <></>
+                  )
+                }
+
+                <Tab.Screen
+                  name="SettingsScreen"
+                  component={SettingScreen}
+                  options={{
+                    title: 'Ayarlar',
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => (
+                      <Image
+                        source={focused ? Icons.fill.settings : Icons.outLine.settings}
+                        style={[StylesAll.icon, { tintColor: focused ? ThemeColors.Home.SubHeaderBar : 'gray' }]}
+                      />
+                    ),
+                  }}
+                />
+              </Tab.Navigator>
+            ) : (
+              <>
+                {
+                  memory ? (
+                    <AuthStack.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                      }}>
+                      <AuthStack.Screen
+                        name="Login"
+                        component={Login}
+                      />
+                    </AuthStack.Navigator>
+                  ) : (
+                    <></>
+                  )
+                }
+              </>
+            )}
+          </NavigationContainer>
+        </AuthContext.Provider >
+      }
+    </>
   );
 };
 

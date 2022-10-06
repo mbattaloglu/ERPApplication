@@ -1,11 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import ClickIcon from "../images/icons/Select.png"
-import UserIcon from "../images/icons/user.png"
-import LogoImage from "../images/logo.png"
 import CalendarIcon from "../images/icons/calendar.png"
 import SearchIcon from "../images/icons/search.png"
-import NextIcon from "../images/icons/next.png"
 import DetailsIcon from "../images/icons/details.png"
 import ImageIcon from "../images/icons/image.png"
 import FilterIcon from "../images/icons/filter.png"
@@ -55,16 +51,9 @@ const ThemeColors = {
 
 }
 
-const Images = {
-    LogoImage: LogoImage
-}
-
 const Icons = {
-    click: ClickIcon,
-    user: UserIcon,
     calendar: CalendarIcon,
     search: SearchIcon,
-    next: NextIcon,
     details: DetailsIcon,
     image: ImageIcon,
     filter: FilterIcon,
@@ -90,12 +79,12 @@ const Icons = {
 }
 
 const Api = {
-    link: 'http://193.53.103.178:5312/api'
+    link: ''
 }
 
 const User = {
     token: '',
-    id: 97209,
+    id: '',
     defaultCurrencyType: '',
     username: '',
     password: '',

@@ -1,6 +1,34 @@
 import { Api, User } from "../components/Constants";
 import { Lists, Totals } from "./ApiAdresses";
 
+async function GetToken({api, username, password}) {
+    try {
+        const data = await fetch(
+            (
+                api +
+                "/api/Authentication"
+            ),
+            {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            },)
+            .then(res => res.json())
+            .then(res => res.token)
+            .catch((err) => {
+                console.log("Giriş yaparken bir hata oluştu: ", err)
+                return ''
+            })
+        return data
+    } catch (err) {
+        console.log("Giriş yaparken bir hata oluştu: ", err)
+        return ''
+    }
+}
+
 /** Adresteki listeyi ister.
  * 
  * @param {String} address Gidilecek adres.*
@@ -73,7 +101,7 @@ async function GetTransportListsDetails(oid) {
             (
                 (
                     Api.link +
-                    '/odata/TransportCards/' +
+                    '/api/odata/TransportCards/' +
                     oid +
                     '?$select=DocumentDate,ShipmentDate,SenderName,TotalPackingQuantity,TotalWeight,CalculatedTotalVolume' +
                     '&$expand=SenderBranch($select=BranchName),' +
@@ -110,7 +138,7 @@ async function GetUserInfo() {
             (
                 (
                     Api.link +
-                    '/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name)'
+                    '/api/odata/CustomerSuppliers?$expand=DefaultCurrencyType($select=Name)'
                 ),
                 {
                     headers: {
@@ -138,7 +166,7 @@ async function GetImage() {
             (
                 (
                     Api.link +
-                    '/odata/Companies/1/GetImage()'
+                    '/api/odata/Companies/1/GetImage()'
                 ),
                 {
                     headers: {
@@ -166,7 +194,7 @@ async function GetSenderNames() {
             (
                 (
                     Api.link +
-                    '/odata/TransportCards?$apply=groupby((SenderName))'
+                    '/api/odata/TransportCards?$apply=groupby((SenderName))'
                 ),
                 {
                     headers: {
@@ -194,7 +222,7 @@ async function GetVehicleNames() {
             (
                 (
                     Api.link +
-                    '/odata/TransportWaybills?$select=declarationNumber&$orderby=declarationNumber'
+                    '/api/odata/TransportWaybills?$select=declarationNumber&$orderby=declarationNumber'
                 ),
                 {
                     headers: {
@@ -222,7 +250,7 @@ async function PostPaymentDirective({ desc, amount, date, packing, check }) {
             (
                 (
                     Api.link +
-                    '/odata/TransportPaymentDirectives/' + User.id + '/PostCustomerTransportPaymentDirective'
+                    '/api/odata/TransportPaymentDirectives/' + User.id + '/PostCustomerTransportPaymentDirective'
                 ),
                 {
                     method: 'POST',
@@ -258,7 +286,7 @@ async function PostUploadImage({ oid, image }) {
             (
                 (
                     Api.link +
-                    '/odata/TransportPaymentDirectives/' + oid + '/UploadFile'
+                    '/api/odata/TransportPaymentDirectives/' + oid + '/UploadFile'
                 ),
                 {
                     method: 'POST',
@@ -286,6 +314,7 @@ async function PostUploadImage({ oid, image }) {
     }
 }
 export {
+    GetToken,
     GetList,
     GetTotals,
     GetTransportListsDetails,

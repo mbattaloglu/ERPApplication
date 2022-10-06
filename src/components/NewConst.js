@@ -6,6 +6,7 @@ const BORDER_COLOR = 'darkgray';
 
 const HEIGHT = Dimensions.get('window').height;
 const totalBox = HEIGHT * 8.5 / 35
+const openBoxLine = HEIGHT * 1.5 / 35
 
 const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxStyles, feetComp }) => {
     return (
@@ -15,7 +16,14 @@ const DataScreen = ({ items, onEnd, itemStyles, canClick, command, titles, boxSt
                 data={items.lists}
                 onEndReached={() => onEnd()}
                 onEndReachedThreshold={.5} // TODO: Calculate this
-                ListFooterComponent={feetComp}
+                ListFooterComponent={
+                    <>
+                        {
+                            feetComp
+                        }
+                        <View style={{ marginBottom: HEIGHT * 1.5 / 35 }} />
+                    </>
+                }
                 //TODO: Add key, if it necessary
                 renderItem={({ item, index }) => {
                     return (
@@ -96,7 +104,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
         <View style={[StylesAll.profileCard, { backgroundColor: lineColor }]}>
             <TouchableOpacity
                 disabled={!canClick}
-                onPress={() => command(items[0][6].oid)}
+                onPress={() => command(items[0][6]?.oid || items[0][1].title)}
             >
                 <View
                     style={{
@@ -119,6 +127,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
                                     >
                                         <Text
                                             style={{ fontWeight: '500', color: 'black' }}
+                                            numberOfLines={1}
                                         >{item.text ? item.text : items[0][index]?.mainTitle}</Text>
                                     </View>
                                 )
@@ -156,6 +165,7 @@ const Box = ({ items, lineColor, itemStyles, canClick, command, titles, boxStyle
                         <View style={{ justifyContent: 'space-between', flex: 1 }}>
                             <Text
                                 style={{ color: 'black', textAlign: 'right' }}
+                                numberOfLines={1}
                             >{items[0][0].title}</Text>
                             {
                                 boxStyles?.icon ? (
