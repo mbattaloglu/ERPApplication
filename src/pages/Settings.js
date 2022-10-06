@@ -1,7 +1,8 @@
-import { Keyboard, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import React from 'react';
 import InputField from '../components/InputField';
 import CustomButton from '../components/CustomButton';
+import { User, Api } from '../components/Constants';
 import { GetToken } from '../components/ApiFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../Context';
@@ -31,7 +32,6 @@ const Settings = () => {
 
   async function IsThatTrue() {
     Keyboard.dismiss()
-    console.log("selam")
     const currValue = {
       api: tempValues.api,
       username: tempValues.username,
@@ -42,21 +42,27 @@ const Settings = () => {
       username: currValue.username,
       password: currValue.password
     })
-    console.log(token)
     if (token) {
       await AsyncStorage.setItem("api", currValue.api)
       await AsyncStorage.setItem("username", currValue.username)
-      console.log("asdasdasdsad: ", currValue.username)
       await AsyncStorage.setItem("password", currValue.password)
       memory()
     }
     else {
-      alert("Hatalı")
+      Alert.alert(
+        "Hata",
+        "Eksik ya da hatalı bilgi girdiniz.",
+        [
+            {
+                text: "Tamam",
+            }
+        ]
+    )
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <InputField
         title={'API'}
         value={api}
@@ -78,7 +84,7 @@ const Settings = () => {
         boxStyle={styles.button}
         onClickHandler={IsThatTrue}
       />
-    </ScrollView>
+    </View>
   );
 };
 

@@ -111,4 +111,4 @@ const StylesAll = StyleSheet.create({
     },
 })
 
-export { ThemeColors, Icons, Images, User, Api, StylesAll };
+export { ThemeColors, Icons, User, Api, StylesAll };
