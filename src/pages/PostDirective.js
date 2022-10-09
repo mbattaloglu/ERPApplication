@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Alert, View } from "react-native";
 import { GetUserInfo, GetVehicleNames, PostPaymentDirective } from "../components/ApiFunctions";
-import BasicBox from "../components/BasicBox";
+import BasicBox from "../components/Visuals/BasicBox";
 import { ThemeColors } from "../components/Constants";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/Visuals/CustomButton";
 
-import InputLine from "../components/InputLine";
+import InputLine from "../components/Visuals/InputLine";
 import { EditDate, GetToday } from "../components/MyFunctions";
-import { LoadingScreen } from "../components/ShortComponents";
+import { LoadingScreen } from "../components/Visuals/ShortComponents";
 
 const listDatas = {
     code: {

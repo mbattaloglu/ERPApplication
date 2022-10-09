@@ -3,8 +3,8 @@ import { View } from "react-native";
 
 import { filterFormat, fuseFilter } from "../../components/MyFunctions";
 
-import DoubleButton from "../../components/DoubleButton";
-import InputLine from "../../components/InputLine";
+import DoubleButton from "../../components/Visuals/DoubleButton";
+import InputLine from "../../components/Visuals/InputLine";
 
 const CustomerSuppliersFilter = ({ navigation }) => {
 
@@ -42,7 +42,7 @@ const CustomerSuppliersFilter = ({ navigation }) => {
 
             <DoubleButton
                 type={'customerSuppliers'}
-                leftCommand={() => /* navigation.goBack() */console.log(filterFormat(fuseFilter(datas), " and "))}
+                leftCommand={() => navigation.goBack()}
                 rightCommand={() => { navigation.navigate("CustomerSuppliers", { filters: filterFormat(fuseFilter(datas), " and ") }) }}
             />
         </View>

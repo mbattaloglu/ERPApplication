@@ -2,12 +2,12 @@ import React, { useMemo, useState, useReducer } from "react";
 import { View } from "react-native";
 import { ThemeColors } from "../components/Constants";
 
-import { DataScreen, OpenScreen } from "../components/NewConst";
+import { DataScreen, OpenScreen } from "../components//Visuals/NewConst";
 
 import { EditDate, Reducer, toAmount } from "../components/MyFunctions";
 import { GetList, GetTotals } from "../components/ApiFunctions";
 
-import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
+import { LoadingScreen, NoDataScreen } from "../components/Visuals/ShortComponents";
 
 var skip = 0;
 var top = 15;

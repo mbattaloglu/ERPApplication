@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, View, Text } from "react-native";
-import { StylesAll } from "./Constants";
+import { StylesAll } from "../Constants";
 
 const NoDataScreen = () => {
     return (

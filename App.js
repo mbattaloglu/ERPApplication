@@ -285,9 +285,6 @@ const App = () => {
     };
   }, []);
 
-  console.log("token: ", userToken)
-  console.log("hafıza: ", memory)
-
   return (
     <>
       {memory != undefined &&

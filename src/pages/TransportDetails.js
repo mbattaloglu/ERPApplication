@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
-import { TotalScreen } from "../components/NewConst";
+import { TotalScreen } from "../components//Visuals/NewConst";
 import { ThemeColors, StylesAll } from "../components/Constants";
-import { LoadingScreen } from "../components/ShortComponents";
+import { LoadingScreen } from "../components/Visuals/ShortComponents";
 import { GetTransportListsDetails } from "../components/ApiFunctions";
 import { EditDate } from "../components/MyFunctions";
 

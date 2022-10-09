@@ -1,7 +1,7 @@
 import React, { useMemo, useReducer } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import SearchBar from "../../components/SearchBar";
-import { LoadingScreen } from "../../components/ShortComponents";
+import SearchBar from "../../components/Visuals/SearchBar";
+import { LoadingScreen } from "../../components/Visuals/ShortComponents";
 
 const datas = {
     data: null,

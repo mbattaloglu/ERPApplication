@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { ThemeColors } from './Constants';
+import { ThemeColors } from '../Constants';
 
 const CustomButton = ({boxStyle, titleStyle, title, onClickHandler}) => { 
   return (

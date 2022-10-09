@@ -1,7 +1,7 @@
 import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import React from 'react';
-import InputField from '../components/InputField';
-import CustomButton from '../components/CustomButton';
+import InputField from '../components/Visuals/InputField';
+import CustomButton from '../components/Visuals/CustomButton';
 import { User, Api } from '../components/Constants';
 import { GetToken } from '../components/ApiFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';

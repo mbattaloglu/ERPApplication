@@ -3,10 +3,10 @@ import { View } from "react-native";
 
 import { filterFormat, fuseFilter } from "../../components/MyFunctions";
 
-import DoubleButton from "../../components/DoubleButton";
+import DoubleButton from "../../components/Visuals/DoubleButton";
 import { GetSenderNames, GetVehicleNames } from "../../components/ApiFunctions";
 
-import InputLine from "../../components/InputLine";
+import InputLine from "../../components/Visuals/InputLine";
 import { ThemeColors } from "../../components/Constants";
 
 const TransportFilter = ({ navigation, route }) => {
@@ -79,7 +79,7 @@ const TransportFilter = ({ navigation, route }) => {
 
             <DoubleButton
                 type={'transportList'}
-                leftCommand={() => /* navigation.goBack() */console.log(filterFormat(fuseFilter(datas), " and "))}
+                leftCommand={() => navigation.goBack()}
                 rightCommand={() => { navigation.navigate("TransportList", { filters: filterFormat(fuseFilter(datas), " and ") }) }}
             />
         </View>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Icons } from "../components/Constants";
+import { Icons } from "../Constants";
 
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { EditDate } from "../components/MyFunctions";
+import { EditDate } from "../MyFunctions";
 
 const InputLine = ({ title, type, command = () => { }, keyboardType, tempValue, currValue, changeData = () => { }, deleteData = () => { } }) => {
     const [value, setValue] = useState();

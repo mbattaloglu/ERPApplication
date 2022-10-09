@@ -3,8 +3,8 @@ import { View } from "react-native";
 
 import { filterFormat, fuseFilterDirective } from "../../components/MyFunctions";
 
-import DoubleButton from "../../components/DoubleButton";
-import InputLine from "../../components/InputLine";
+import DoubleButton from "../../components/Visuals/DoubleButton";
+import InputLine from "../../components/Visuals/InputLine";
 
 const DirectivesFilter = ({ navigation }) => {
 

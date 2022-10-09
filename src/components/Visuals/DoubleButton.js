@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { ThemeColors } from "./Constants";
+import { ThemeColors } from "../Constants";
 
 const DoubleButton = ({ leftCommand, rightCommand, type }) => {
     console.log(type)

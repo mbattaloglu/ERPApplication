@@ -2,11 +2,11 @@ import React, { useMemo, useState, useReducer } from "react";
 import { Alert, Dimensions, View } from "react-native";
 import { ThemeColors, Icons } from "../components/Constants";
 
-import { AddButon, DataScreen, OpenScreen } from "../components/NewConst";
+import { AddButon, DataScreen, OpenScreen } from "../components//Visuals/NewConst";
 
 
 import { EditDate, Reducer, toAmount } from "../components/MyFunctions";
-import { LoadingScreen, NoDataScreen } from "../components/ShortComponents";
+import { LoadingScreen, NoDataScreen } from "../components/Visuals/ShortComponents";
 
 import { GetList, GetTotals, PostUploadImage } from "../components/ApiFunctions";
 
